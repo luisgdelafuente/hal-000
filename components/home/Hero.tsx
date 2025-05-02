@@ -1,32 +1,17 @@
 'use client';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 const Hero = () => {
-  const [fontLoaded, setFontLoaded] = useState(false);
-
-  useEffect(() => {
-    if (document.fonts) {
-      document.fonts.ready.then(() => setFontLoaded(true));
-    } else {
-      setFontLoaded(true);
-    }
-  }, []);
-
   return (
     <section className="w-full py-20 md:py-32 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-8 text-center">
         <div className="inline-block px-3 py-1 mb-6 bg-muted text-sm font-medium rounded-full">
           Coming Soon
         </div>
-        {fontLoaded ? (
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl mx-auto mb-6 min-h-[56px]">
-            Industry-Specific AI Applications
-          </h1>
-        ) : (
-          <div className="mx-auto mb-6 min-h-[56px] max-w-4xl animate-pulse bg-muted rounded" style={{height: 56}} />
-        )}
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl mx-auto mb-6 min-h-[56px]">
+          Industry-Specific AI Applications
+        </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
           Transform data into insights, automate workflows, and stay ahead
           of the competition.
