@@ -7,8 +7,17 @@ import { formatDate } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { getBlogPosts } from '@/lib/api';
 
+type BlogPost = {
+  title: string;
+  slug: string;
+  date: string;
+  image: string;
+  excerpt: string;
+  content: string;
+};
+
 const BlogPreview = () => {
-  const [blogPosts, setBlogPosts] = useState([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -45,7 +54,7 @@ const BlogPreview = () => {
   return (
     <section className="w-full py-20 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 min-h-[96px]">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 min-h-[140px]">
           <div>
             <h2 className="text-3xl font-bold tracking-tight mb-4 min-h-[40px]">Latest from Our Blog</h2>
             <p className="text-muted-foreground max-w-2xl min-h-[24px]">
