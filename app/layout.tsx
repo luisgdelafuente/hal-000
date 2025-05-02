@@ -66,6 +66,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preload" as="style" href="/css/18e61613137f96cd.css" />
+        <link rel="stylesheet" href="/css/18e61613137f96cd.css" />
+      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
