@@ -20,16 +20,16 @@ const features = [
 
 const Features = () => {
   return (
-    <section className="w-full py-20 bg-muted/30">
+    <section className="w-full py-20 bg-muted/30 min-h-[420px]">
       <div className="container mx-auto px-4 sm:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-background p-8 rounded-xl shadow-sm border border-border/40 hover:shadow-md transition-shadow">
+            <div key={index} className="bg-background p-8 rounded-xl shadow-sm border border-border/40 hover:shadow-md transition-shadow min-h-[220px]">
               <div className="h-12 w-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6 text-primary">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-3 min-h-[28px]">{feature.title}</h3>
+              <p className="text-muted-foreground min-h-[40px]">{feature.description}</p>
             </div>
           ))}
         </div>
