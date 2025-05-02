@@ -9,7 +9,7 @@ const Hero = () => {
           Coming Soon
         </div>
         
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl mx-auto mb-6">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl mx-auto mb-6 min-h-[56px]">
           Industry-Specific AI Applications
         </h1>
         

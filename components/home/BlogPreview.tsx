@@ -45,10 +45,10 @@ const BlogPreview = () => {
   return (
     <section className="w-full py-20 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-8">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 min-h-[96px]">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Latest from Our Blog</h2>
-            <p className="text-muted-foreground max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight mb-4 min-h-[40px]">Latest from Our Blog</h2>
+            <p className="text-muted-foreground max-w-2xl min-h-[24px]">
               Stay updated with the latest insights in AI and technology
             </p>
           </div>
@@ -64,25 +64,27 @@ const BlogPreview = () => {
           {blogPosts.map((post, index) => (
             <article 
               key={index} 
-              className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all"
+              className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all min-h-[380px]"
             >
               <Link href={`/blog/${post.slug}`}>
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-48 min-h-[192px] overflow-hidden">
                   <Image 
                     src={post.image} 
                     alt={post.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    priority={index === 0}
                   />
                 </div>
                 <div className="p-6">
                   <time className="text-sm text-muted-foreground">
                     {formatDate(post.date)}
                   </time>
-                  <h3 className="text-xl font-semibold mt-2 mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-semibold mt-2 mb-2 group-hover:text-primary transition-colors min-h-[28px]">
                     {post.title}
                   </h3>
-                  <p className="text-muted-foreground">{post.excerpt}</p>
+                  <p className="text-muted-foreground min-h-[20px]">{post.excerpt}</p>
                 </div>
               </Link>
             </article>
