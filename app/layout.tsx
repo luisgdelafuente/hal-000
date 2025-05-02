@@ -1,3 +1,4 @@
+import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Header from '@/components/common/Header';
@@ -65,26 +66,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <style>{`
-          @tailwind base;
-          @tailwind components;
-          @tailwind utilities;
-          :root {
-            --foreground-rgb: 0, 0, 0;
-            --background-start-rgb: 214, 219, 220;
-            --background-end-rgb: 255, 255, 255;
-          }
-          @media (prefers-color-scheme: dark) {
-            :root {
-              --foreground-rgb: 255, 255, 255;
-              --background-start-rgb: 0, 0, 0;
-              --background-end-rgb: 0, 0, 0;
-            }
-          }
-          /* ...rest of your globals.css here... */
-        `}</style>
-      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
