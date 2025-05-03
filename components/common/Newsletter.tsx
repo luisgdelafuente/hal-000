@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { addToWaitlist } from '@/lib/db';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
@@ -14,15 +15,8 @@ const Newsletter = () => {
     setIsSubmitting(true);
     setError('');
     
-    // Simulate API call - would connect to Supabase in Phase 2
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (!email.includes('@')) {
-        throw new Error('Please enter a valid email address');
-      }
-      
+      await addToWaitlist(email);
       setIsSuccess(true);
       setEmail('');
     } catch (err) {

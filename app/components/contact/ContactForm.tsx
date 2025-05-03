@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { submitContactForm } from '@/lib/api';
+import { createContactMessage } from '@/lib/db';
 
 interface FormData {
   name: string;
@@ -32,7 +32,7 @@ export default function ContactForm() {
     setError('');
     
     try {
-      await submitContactForm(formData);
+      await createContactMessage(formData);
       setIsSuccess(true);
       setFormData({
         name: '',

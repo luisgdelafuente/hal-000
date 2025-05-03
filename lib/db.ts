@@ -133,6 +133,16 @@ export async function updatePageContent(id: number, updates: Partial<PageContent
   return data as PageContent
 }
 
+export async function getAllPages() {
+  const { data, error } = await supabase
+    .from('page_contents')
+    .select('*')
+    .order('page', { ascending: true });
+
+  if (error) throw error;
+  return data as PageContent[];
+}
+
 // Contact Messages
 export async function createContactMessage(message: Omit<ContactMessage, 'id' | 'submitted_at' | 'read'>) {
   const { data, error } = await supabase
@@ -164,6 +174,16 @@ export async function addToWaitlist(email: string) {
   
   if (error) throw error
   return data as Waitlist
+}
+
+export async function getAllWaitlist() {
+  const { data, error } = await supabase
+    .from('waitlist')
+    .select('*')
+    .order('submitted_at', { ascending: false });
+
+  if (error) throw error;
+  return data as Waitlist[];
 }
 
 // Admin Functions

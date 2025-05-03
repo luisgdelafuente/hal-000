@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -7,15 +9,56 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getUnreadMessages, markMessageAsRead } from '@/lib/db';
+import { getUnreadMessages, markMessageAsRead, deleteContactMessage } from '@/lib/db';
 import { 
   Mail, 
   Check, 
   Trash2 
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-export default async function MessagesPage() {
-  const messages = await getUnreadMessages();
+export default function MessagesPage() {
+  const [messages, setMessages] = useState<Awaited<ReturnType<typeof getUnreadMessages>>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchMessages = async () => {
+    try {
+      const data = await getUnreadMessages();
+      setMessages(data);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMarkAsRead = async (id: number) => {
+    try {
+      await markMessageAsRead(id);
+      await fetchMessages();
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this message?')) return;
+    
+    try {
+      await deleteContactMessage(id);
+      await fetchMessages();
+    } catch (error) {
+      console.error('Error deleting message:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -48,15 +91,18 @@ export default async function MessagesPage() {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <form action={async () => {
-                      'use server'
-                      await markMessageAsRead(message.id)
-                    }}>
-                      <Button variant="outline" size="icon" type="submit">
-                        <Check className="h-4 w-4" />
-                      </Button>
-                    </form>
-                    <Button variant="outline" size="icon">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => handleMarkAsRead(message.id)}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => handleDelete(message.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>

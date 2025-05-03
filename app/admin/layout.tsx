@@ -9,7 +9,9 @@ import {
   Image, 
   Users,
   Mail,
-  LogOut
+  LogOut,
+  File,
+  List
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -51,6 +53,20 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                 >
                   <Newspaper className="h-4 w-4" />
                   Blog Posts
+                </Link>
+                <Link
+                  href="/admin/pages"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <File className="h-4 w-4" />
+                  Pages
+                </Link>
+                <Link
+                  href="/admin/waitlist"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <List className="h-4 w-4" />
+                  Waitlist
                 </Link>
                 <Link
                   href="/admin/messages"
