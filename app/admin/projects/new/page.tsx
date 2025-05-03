@@ -1,135 +1,225 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { createProject } from '@/lib/db';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
-export default function NewProjectForm() {
+const projectFormSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  description: z.string().min(1, 'Description is required'),
+  content: z.string().min(1, 'Content is required'),
+  category: z.string().min(1, 'Category is required'),
+  image_url: z.string().url('Must be a valid URL'),
+  is_featured: z.boolean().default(false),
+  github_url: z.string().url('Must be a valid URL').optional(),
+  demo_url: z.string().url('Must be a valid URL').optional(),
+});
+
+export default function NewProjectPage() {
+  const router = useRouter();
+
+  const form = useForm<z.infer<typeof projectFormSchema>>({
+    resolver: zodResolver(projectFormSchema),
+    defaultValues: {
+      title: '',
+      slug: '',
+      description: '',
+      content: '',
+      category: '',
+      image_url: '',
+      is_featured: false,
+      github_url: '',
+      demo_url: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof projectFormSchema>) {
+    try {
+      await createProject(values);
+      router.push('/admin/projects');
+    } catch (error) {
+      console.error('Error creating project:', error);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">New Project</h1>
-        <Button>Create Project</Button>
       </div>
 
-      <div className="grid gap-6">
-        {/* Basic Information */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Basic Information</h2>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="Enter project title" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="slug">Slug</Label>
-              <Input id="slug" placeholder="Enter URL slug" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="industry">Industry</Label>
-              <Input id="industry" placeholder="Enter industry" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea 
-                id="description" 
-                placeholder="Enter project description"
-                className="min-h-[100px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="image">Featured Image URL</Label>
-              <Input id="image" placeholder="Enter image URL" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="technologies">Technologies (comma separated)</Label>
-              <Input 
-                id="technologies" 
-                placeholder="Enter technologies" 
-              />
-            </div>
-          </div>
-        </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Project title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* Content Sections */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Content Sections</h2>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="about">About</Label>
-              <Textarea 
-                id="about" 
-                placeholder="Enter about section"
-                className="min-h-[100px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="challenge">Challenge</Label>
-              <Textarea 
-                id="challenge" 
-                placeholder="Enter challenge section"
-                className="min-h-[100px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="solution">Solution</Label>
-              <Textarea 
-                id="solution" 
-                placeholder="Enter solution section"
-                className="min-h-[100px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="results">Results</Label>
-              <Textarea 
-                id="results" 
-                placeholder="Enter results section"
-                className="min-h-[100px]"
-              />
-            </div>
-          </div>
-        </div>
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input placeholder="project-slug" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        {/* SEO & Social */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">SEO & Social Media</h2>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="metaTitle">Meta Title</Label>
-              <Input 
-                id="metaTitle" 
-                placeholder="Enter meta title" 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="metaDescription">Meta Description</Label>
-              <Textarea 
-                id="metaDescription" 
-                placeholder="Enter meta description"
-                className="min-h-[100px]"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="ogImage">Open Graph Image URL</Label>
-              <Input id="ogImage" placeholder="Enter Open Graph image URL" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="ogTitle">Open Graph Title</Label>
-              <Input 
-                id="ogTitle" 
-                placeholder="Enter Open Graph title" 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="ogDescription">Open Graph Description</Label>
-              <Textarea 
-                id="ogDescription" 
-                placeholder="Enter Open Graph description"
-                className="min-h-[100px]"
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Project category" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="github_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>GitHub URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://github.com/username/repo" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="demo_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Demo URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://demo.example.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="is_featured"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Featured Project</FormLabel>
+                    <p className="text-sm text-muted-foreground">
+                      Show this project in the featured section
+                    </p>
+                  </div>
+                </FormItem>
+              )}
+            />
           </div>
-        </div>
-      </div>
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Brief project description"
+                    className="min-h-[100px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Content</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Project content"
+                    className="min-h-[200px]"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-end gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.push('/admin/projects')}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Create Project</Button>
+          </div>
+        </form>
+      </Form>
     </div>
   );
 } 

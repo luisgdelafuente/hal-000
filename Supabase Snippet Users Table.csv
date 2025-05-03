@@ -1,0 +1,35 @@
+table_name,column_name,data_type,is_nullable
+blog_posts,id,integer,NO
+blog_posts,title,text,NO
+blog_posts,slug,text,NO
+blog_posts,excerpt,text,NO
+blog_posts,content,text,NO
+blog_posts,image_url,text,NO
+blog_posts,published_at,text,NO
+contact_messages,id,integer,NO
+contact_messages,name,text,NO
+contact_messages,email,text,NO
+contact_messages,subject,text,NO
+contact_messages,message,text,NO
+contact_messages,submitted_at,timestamp with time zone,YES
+contact_messages,read,boolean,YES
+page_contents,id,integer,NO
+page_contents,page,text,NO
+page_contents,content,jsonb,NO
+page_contents,updated_at,timestamp with time zone,NO
+projects,id,integer,NO
+projects,title,text,NO
+projects,slug,text,NO
+projects,description,text,NO
+projects,content,text,NO
+projects,category,text,NO
+projects,image_url,text,NO
+projects,is_featured,boolean,YES
+projects,github_url,text,YES
+projects,demo_url,text,YES
+users,id,integer,NO
+users,username,text,NO
+users,password,text,NO
+waitlist,id,integer,NO
+waitlist,email,text,NO
+waitlist,submitted_at,timestamp with time zone,NO

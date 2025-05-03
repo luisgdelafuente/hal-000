@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -7,15 +9,53 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { projects } from '@/lib/data';
+import { getProjects, deleteProject } from '@/lib/db';
 import { 
   Pencil, 
   Trash2, 
-  Plus 
+  Plus,
+  Eye,
+  Edit
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
 
 export default function ProjectsPage() {
+  const router = useRouter();
+  const [projects, setProjects] = useState<Awaited<ReturnType<typeof getProjects>>>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchProjects = async () => {
+    try {
+      const data = await getProjects();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    
+    try {
+      await deleteProject(id);
+      await fetchProjects();
+    } catch (error) {
+      console.error('Error deleting project:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -33,28 +73,17 @@ export default function ProjectsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
-              <TableHead>Industry</TableHead>
-              <TableHead>Technologies</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Featured</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {projects.map((project) => (
-              <TableRow key={project.slug}>
+              <TableRow key={project.id}>
                 <TableCell className="font-medium">{project.title}</TableCell>
-                <TableCell>{project.industry}</TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="rounded-full bg-secondary px-2 py-1 text-xs"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </TableCell>
+                <TableCell>{project.category}</TableCell>
+                <TableCell>{project.is_featured ? 'Yes' : 'No'}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Link href={`/projects/${project.slug}`} target="_blank">
@@ -68,10 +97,14 @@ export default function ProjectsPage() {
                     </Link>
                     <Link href={`/admin/projects/${project.slug}`}>
                       <Button variant="outline" size="icon">
-                        <Pencil className="h-4 w-4" />
+                        <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
-                    <Button variant="outline" size="icon">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleDelete(project.id)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
