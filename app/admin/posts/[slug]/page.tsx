@@ -66,8 +66,12 @@ export default function EditBlogPostPage({ params }: { params: { slug: string } 
   async function onSubmit(values: z.infer<typeof blogPostFormSchema>) {
     try {
       const postData = {
-        ...values,
-        published_at: values.published ? new Date().toISOString() : null,
+        title: values.title,
+        slug: values.slug,
+        excerpt: values.excerpt,
+        content: values.content,
+        image_url: values.image_url,
+        published_at: values.published ? new Date().toISOString() : undefined,
       };
       await updateBlogPost(post.id, postData);
       router.push('/admin/posts');
