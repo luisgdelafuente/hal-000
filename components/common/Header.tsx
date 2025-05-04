@@ -25,25 +25,25 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <Link 
-            href="/projects" 
+            href="/projects/" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Projects
           </Link>
           <Link 
-            href="/blog" 
+            href="/blog/" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Blog
           </Link>
           <Link 
-            href="/about" 
+            href="/about/" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             About
           </Link>
           <Link 
-            href="/contact" 
+            href="/contact/" 
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             Contact
@@ -74,28 +74,28 @@ const Header = () => {
         )}>
           <nav className="flex flex-col px-6 py-8 space-y-6">
             <Link 
-              href="/projects" 
+              href="/projects/" 
               className="text-lg font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Projects
             </Link>
             <Link 
-              href="/blog" 
+              href="/blog/" 
               className="text-lg font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Blog
             </Link>
             <Link 
-              href="/about" 
+              href="/about/" 
               className="text-lg font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link 
-              href="/contact" 
+              href="/contact/" 
               className="text-lg font-medium py-2"
               onClick={() => setIsMenuOpen(false)}
             >

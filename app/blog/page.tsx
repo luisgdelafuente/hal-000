@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'HAL149 Blog',
     description: 'Latest insights and articles on AI, machine learning, and technology trends.',
-    url: 'https://hal149.com/blog',
+    url: 'https://hal149.com/blog/',
     images: [
       {
         url: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
@@ -46,10 +46,10 @@ export default async function BlogPage() {
             key={index} 
             className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all"
           >
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={`/blog/${post.slug}/`}>
               <div className="relative h-48 overflow-hidden">
                 <Image 
-                  src={post.image} 
+                  src={post.image_url} 
                   alt={post.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -57,7 +57,7 @@ export default async function BlogPage() {
               </div>
               <div className="p-6">
                 <time className="text-sm text-muted-foreground">
-                  {formatDate(post.date)}
+                  {formatDate(post.published_at)}
                 </time>
                 <h3 className="text-xl font-semibold mt-2 mb-2 group-hover:text-primary transition-colors">
                   {post.title}

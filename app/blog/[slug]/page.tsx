@@ -36,11 +36,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: post.title,
       description: post.excerpt,
       type: 'article',
-      publishedTime: post.date,
-      url: `https://hal149.com/blog/${post.slug}`,
+      url: `https://hal149.com/blog/${post.slug}/`,
       images: [
         {
-          url: post.image,
+          url: post.image_url,
           width: 1200,
           height: 630,
           alt: post.title,
@@ -51,7 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: post.title,
       description: post.excerpt,
-      images: [post.image],
+      images: [post.image_url],
     },
   };
 }
@@ -66,7 +65,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
       <Link 
-        href="/blog" 
+        href="/blog/" 
         className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
       >
         <ChevronLeft className="h-4 w-4 mr-1" />
@@ -76,7 +75,7 @@ export default async function BlogPostPage({ params }: PageProps) {
       <article>
         <div className="max-w-3xl mx-auto">
           <time className="text-sm text-muted-foreground">
-            {formatDate(post.date)}
+            {formatDate(post.published_at)}
           </time>
           
           <h1 className="text-4xl font-bold tracking-tight mt-2 mb-4">{post.title}</h1>
@@ -84,7 +83,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           
           <div className="relative h-[400px] rounded-xl overflow-hidden mb-12">
             <Image 
-              src={post.image} 
+              src={post.image_url} 
               alt={post.title}
               fill
               className="object-cover"

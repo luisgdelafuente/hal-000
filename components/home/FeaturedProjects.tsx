@@ -15,7 +15,7 @@ const FeaturedProjects = () => {
             </p>
           </div>
           <Link 
-            href="/projects"
+            href="/projects/"
             className="inline-flex items-center text-sm font-medium mt-4 md:mt-0 hover:underline"
           >
             View all projects <ArrowRight className="ml-1 h-4 w-4" />

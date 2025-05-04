@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'HAL149 Projects',
     description: 'Explore our AI projects and case studies across various industries.',
-    url: 'https://hal149.com/projects',
+    url: 'https://hal149.com/projects/',
     images: [
       {
         url: 'https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg',
@@ -60,15 +60,15 @@ export default async function ProjectsPage() {
         {projects.map((project, index) => (
           <Link 
             key={index} 
-            href={`/projects/${project.slug}`}
+            href={`/projects/${project.slug}/`}
             className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all"
           >
             <div className="relative h-48 overflow-hidden">
               <div className="absolute top-3 right-3 z-10 bg-background/90 px-3 py-1 rounded-full text-xs font-medium">
-                {project.industry}
+                {project.category}
               </div>
               <Image 
-                src={project.image} 
+                src={project.image_url} 
                 alt={project.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"

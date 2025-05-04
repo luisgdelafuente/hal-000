@@ -10,8 +10,8 @@ import { getBlogPosts } from '@/lib/api';
 type BlogPost = {
   title: string;
   slug: string;
-  date: string;
-  image: string;
+  published_at: string;
+  image_url: string;
   excerpt: string;
   content: string;
 };
@@ -62,7 +62,7 @@ const BlogPreview = () => {
             </p>
           </div>
           <Link 
-            href="/blog"
+            href="/blog/"
             className="inline-flex items-center text-sm font-medium mt-4 md:mt-0 hover:underline"
           >
             View all posts <ArrowRight className="ml-1 h-4 w-4" />
@@ -75,10 +75,10 @@ const BlogPreview = () => {
               key={index} 
               className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all min-h-[380px]"
             >
-              <Link href={`/blog/${post.slug}`}>
+              <Link href={`/blog/${post.slug}/`}>
                 <div className="relative h-48 min-h-[192px] overflow-hidden">
                   <Image 
-                    src={post.image} 
+                    src={post.image_url} 
                     alt={post.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -88,7 +88,7 @@ const BlogPreview = () => {
                 </div>
                 <div className="p-6">
                   <time className="text-sm text-muted-foreground">
-                    {formatDate(post.date)}
+                    {formatDate(post.published_at)}
                   </time>
                   <h3 className="text-xl font-semibold mt-2 mb-2 group-hover:text-primary transition-colors min-h-[28px]">
                     {post.title}

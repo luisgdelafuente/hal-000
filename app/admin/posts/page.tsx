@@ -82,7 +82,7 @@ export default function BlogPostsPage() {
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
-                  <Link href={`/blog/${post.slug}`}>
+                  <Link href={`/blog/${post.slug}/`} target="_blank">
                     <Button variant="ghost" size="icon">
                       <Eye className="h-4 w-4" />
                     </Button>

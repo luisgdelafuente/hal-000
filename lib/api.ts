@@ -1,19 +1,19 @@
-import { projects, blogPosts } from './data';
+import { getProjectBySlug, getProjects as getSupabaseProjects, getBlogPostBySlug, getBlogPosts as getSupabaseBlogPosts } from './db';
 
 export async function getProjects() {
-  return projects;
+  return getSupabaseProjects();
 }
 
 export async function getProject(slug: string) {
-  return projects.find(project => project.slug === slug) || null;
+  return getProjectBySlug(slug);
 }
 
 export async function getBlogPosts() {
-  return blogPosts;
+  return getSupabaseBlogPosts();
 }
 
 export async function getBlogPost(slug: string) {
-  return blogPosts.find(post => post.slug === slug) || null;
+  return getBlogPostBySlug(slug);
 }
 
 export async function submitContactForm(formData: {

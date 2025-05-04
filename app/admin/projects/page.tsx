@@ -86,7 +86,7 @@ export default function ProjectsPage() {
                 <TableCell>{project.is_featured ? 'Yes' : 'No'}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Link href={`/projects/${project.slug}`} target="_blank">
+                    <Link href={`/projects/${project.slug}/`} target="_blank">
                       <Button variant="outline" size="icon" title="View">
                         <span className="sr-only">View</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-4 w-4">
