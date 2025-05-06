@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
@@ -25,11 +26,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         {/* Sidebar */}
         <div className="border-r bg-muted/40 lg:block lg:w-60">
           <div className="flex h-full max-h-screen flex-col gap-2">
-            <div className="flex h-14 items-center border-b px-4">
-              <Link href="/admin" className="flex items-center gap-2 font-semibold">
-                <span>HAL149</span>
-              </Link>
-            </div>
             <div className="flex-1 overflow-auto py-2">
               <nav className="grid items-start px-2 text-sm font-medium">
                 <Link
