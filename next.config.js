@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  trailingSlash: true,
+  // output: 'export', // <-- This line must be removed or commented out
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: {
+  images: { 
     unoptimized: true,
     domains: ['images.pexels.com']
   },

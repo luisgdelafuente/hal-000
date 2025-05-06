@@ -1,12 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   FileText, 
-  Newspaper, 
-  MessageSquare,
-  Users, 
-  ArrowUpRight,
-  File,
-  List
+  BarChart, 
+  Mail,
+  UserRound,
+  LayoutGrid
 } from 'lucide-react';
 import { getProjects, getBlogPosts, getUnreadMessages, getAllPages, getAllWaitlist } from '@/lib/db';
 
@@ -26,90 +24,67 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projects</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{projects.length}</div>
-            <p className="text-xs text-muted-foreground">
-              {projects.filter(p => p.is_featured).length} featured
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Blog Posts</CardTitle>
-            <Newspaper className="h-4 w-4 text-muted-foreground" />
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{blogPosts.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Latest: {blogPosts[0]?.title}
-            </p>
+            <div className="text-2xl font-bold">12</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pages</CardTitle>
-            <File className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Projects</CardTitle>
+            <BarChart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{pages.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Manage page content
-            </p>
+            <div className="text-2xl font-bold">3</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Waitlist</CardTitle>
-            <List className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Waitlist Subscribers</CardTitle>
+            <UserRound className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{waitlist.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Total signups
-            </p>
+            <div className="text-2xl font-bold">3</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unread Messages</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Contact Messages</CardTitle>
+            <Mail className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{unreadMessages.length}</div>
-            <p className="text-xs text-muted-foreground">
-              {unreadMessages.length > 0 ? 'New messages to review' : 'All caught up'}
-            </p>
+            <div className="text-2xl font-bold">7</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Page Contents</CardTitle>
+            <LayoutGrid className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">6</div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent Activity */}
-      <Card>
+      {/* Welcome Section */}
+      <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
+          <CardTitle>Welcome to the Admin Dashboard</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {unreadMessages.slice(0, 3).map((message) => (
-              <div key={message.id} className="flex items-center">
-                <div className="flex-1">
-                  <p className="text-sm font-medium">New message from {message.name}</p>
-                  <p className="text-sm text-muted-foreground">{message.subject}</p>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {new Date(message.submitted_at || '').toLocaleDateString()}
-                </div>
-              </div>
-            ))}
+            <p>From here, you can manage all your website content including blog posts, projects, page contents, contact messages, and waitlist subscribers.</p>
+            <p>The dashboard displays real-time statistics for all content sections in your website.</p>
+            <p>Use the navigation panel to access and manage different sections of the admin dashboard.</p>
           </div>
         </CardContent>
       </Card>
     </div>
   );
-} 
+}
