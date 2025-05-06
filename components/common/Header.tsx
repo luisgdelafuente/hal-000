@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Prevent body scroll when menu is open and handle resize
+  // Handle menu state and body scroll
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
@@ -17,17 +17,28 @@ const Header = () => {
       }
     };
 
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Prevent scrolling when menu is open
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
 
+    // Add event listeners
     window.addEventListener('resize', handleResize);
+    window.addEventListener('keydown', handleEscape);
     
+    // Cleanup
     return () => {
       document.body.style.overflow = 'unset';
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('keydown', handleEscape);
     };
   }, [isMenuOpen]);
 
@@ -36,7 +47,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
@@ -97,16 +108,22 @@ const Header = () => {
         </button>
 
         {/* Mobile Menu Overlay */}
-        <div className={cn(
-          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm transition-opacity duration-300 md:hidden",
-          isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        )} />
+        <div 
+          className={cn(
+            "fixed inset-0 z-30 bg-background/80 backdrop-blur-sm transition-opacity duration-300 md:hidden",
+            isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
+          onClick={() => setIsMenuOpen(false)}
+        />
 
         {/* Mobile Menu */}
-        <div className={cn(
-          "fixed top-16 left-0 right-0 bottom-0 z-40 bg-background transition-all duration-300 ease-in-out md:hidden overflow-y-auto",
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
-        )}>
+        <div 
+          className={cn(
+            "fixed top-16 inset-x-0 bottom-0 z-40 bg-background shadow-lg transition-all duration-300 ease-in-out md:hidden overflow-y-auto",
+            isMenuOpen ? "translate-y-0 opacity-100 visible" : "translate-y-[100vh] opacity-0 invisible"
+          )}
+          aria-hidden={!isMenuOpen}
+        >
           <nav className="flex flex-col h-full">
             <div className="flex-1 px-6 py-8 space-y-4">
               <Link 
