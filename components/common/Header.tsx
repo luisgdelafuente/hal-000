@@ -4,15 +4,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, Globe } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Handle menu state and body scroll
+  // Handle menu state, body scroll, and keyboard/resize events
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth >= 768) { // md breakpoint
         setIsMenuOpen(false);
       }
     };
@@ -23,20 +22,18 @@ const Header = () => {
       }
     };
 
-    // Prevent scrolling when menu is open
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
 
-    // Add event listeners
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleEscape);
     
     // Cleanup
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'; // Ensure body scroll is restored on unmount
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleEscape);
     };
@@ -99,6 +96,7 @@ const Header = () => {
           className="md:hidden p-2 rounded-md text-muted-foreground hover:bg-muted/50 transition-colors"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
         >
           {isMenuOpen ? (
             <X className="h-6 w-6" />
@@ -107,62 +105,22 @@ const Header = () => {
           )}
         </button>
 
-        {/* Mobile Menu Overlay */}
-        <div 
-          className={cn(
-            "fixed inset-0 z-30 bg-background/80 backdrop-blur-sm transition-opacity duration-300 md:hidden",
-            isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          )}
-          onClick={() => setIsMenuOpen(false)}
-        />
-
-        {/* Mobile Menu */}
-        <div 
-          className={cn(
-            "fixed top-16 inset-x-0 bottom-0 z-40 bg-background shadow-lg transition-all duration-300 ease-in-out md:hidden overflow-y-auto",
-            isMenuOpen ? "translate-y-0 opacity-100 visible" : "translate-y-[100vh] opacity-0 invisible"
-          )}
-          aria-hidden={!isMenuOpen}
-        >
-          <nav className="flex flex-col h-full">
-            <div className="flex-1 px-6 py-8 space-y-4">
-              <Link 
-                href="/projects/" 
-                className="block text-lg font-medium py-3 hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Projects
-              </Link>
-              <Link 
-                href="/blog/" 
-                className="block text-lg font-medium py-3 hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Blog
-              </Link>
-              <Link 
-                href="/about/" 
-                className="block text-lg font-medium py-3 hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link 
-                href="/contact/" 
-                className="block text-lg font-medium py-3 hover:text-primary transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-            </div>
-            <div className="border-t px-6 py-4">
-              <div className="flex items-center space-x-2">
+        {/* Mobile Menu Panel */}
+        {isMenuOpen && (
+          <div className="fixed inset-0 top-16 z-40 bg-background p-6 md:hidden">
+            {/* Mobile navigation links will go here */}
+            <nav className="flex flex-col space-y-4">
+              <Link href="/projects/" className="text-lg font-medium hover:text-primary" onClick={toggleMenu}>Projects</Link>
+              <Link href="/blog/" className="text-lg font-medium hover:text-primary" onClick={toggleMenu}>Blog</Link>
+              <Link href="/about/" className="text-lg font-medium hover:text-primary" onClick={toggleMenu}>About</Link>
+              <Link href="/contact/" className="text-lg font-medium hover:text-primary" onClick={toggleMenu}>Contact</Link>
+               <div className="flex items-center space-x-1 border-t pt-4 mt-4">
                 <Globe className="h-5 w-5 text-muted-foreground" />
-                <span className="text-base font-medium">EN</span>
+                <span className="text-lg font-medium">EN</span>
               </div>
-            </div>
-          </nav>
-        </div>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );
