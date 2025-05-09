@@ -490,8 +490,12 @@ video {
 }
 
 body {
+  background-color: #ffffff; /* Explicitly white */
+  color: var(--foreground); /* Keep foreground as defined by theme */
+}
+
+.dark body { /* Ensure dark mode still overrides to its background if .dark is on html */
   background-color: var(--background);
-  color: var(--foreground);
 }
 
 *, ::before, ::after {
@@ -612,19 +616,19 @@ body {
 
 @media (min-width: 1024px) {
   .container {
-    max-width: 1024px;
+    max-width: 992px; /* ছিল 1024px */
   }
 }
 
 @media (min-width: 1280px) {
   .container {
-    max-width: 1280px;
+    max-width: 1152px; /* ছিল 1280px */
   }
 }
 
 @media (min-width: 1536px) {
   .container {
-    max-width: 1536px;
+    max-width: 1366px; /* ছিল 1536px */
   }
 }
 

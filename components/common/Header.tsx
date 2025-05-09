@@ -44,7 +44,7 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-300 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
@@ -107,7 +107,8 @@ const Header = () => {
 
         {/* Mobile Menu Panel */}
         {isMenuOpen && (
-          <div className="fixed inset-0 top-16 z-40 bg-background p-6 md:hidden">
+          <div className="fixed top-16 right-0 bottom-0 z-40 w-3/4 sm:w-96 !bg-white dark:!bg-slate-900 p-6 md:hidden shadow-xl">
+            {/* Added shadow-xl for better separation */}
             {/* Mobile navigation links will go here */}
             <nav className="flex flex-col space-y-4">
               <Link href="/projects/" className="text-lg font-medium hover:text-primary" onClick={toggleMenu}>Projects</Link>
