@@ -31,13 +31,13 @@ const BlogPreview = () => {
 
   if (isLoading) {
     return (
-      <section className="w-full py-20 bg-muted/30">
+      <section className="w-full py-20" style={{ backgroundColor: '#f1f5f9' }}>
         <div className="container mx-auto px-4 sm:px-8">
           <div className="animate-pulse space-y-8">
             <div className="h-8 bg-muted rounded w-1/4"></div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-background rounded-xl p-4 space-y-4">
+                <div key={i} className="rounded-xl p-4 space-y-4" style={{ backgroundColor: 'white' }}>
                   <div className="h-48 bg-muted rounded-xl"></div>
                   <div className="h-4 bg-muted rounded w-1/4"></div>
                   <div className="h-6 bg-muted rounded w-3/4"></div>
@@ -52,7 +52,7 @@ const BlogPreview = () => {
   }
 
   return (
-    <section className="w-full py-20 bg-muted/30">
+    <section className="w-full py-20" style={{ backgroundColor: '#f1f5f9' }}>
       <div className="container mx-auto px-4 sm:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 min-h-[140px]">
           <div>
@@ -73,7 +73,8 @@ const BlogPreview = () => {
           {blogPosts.map((post, index) => (
             <article 
               key={index} 
-              className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all min-h-[380px]"
+              className="group overflow-hidden rounded-xl border border-border/40 shadow-sm hover:shadow-md transition-all min-h-[380px]"
+              style={{ backgroundColor: 'white' }}
             >
               <Link href={`/blog/${post.slug}/`}>
                 <div className="relative h-48 min-h-[192px] overflow-hidden">
