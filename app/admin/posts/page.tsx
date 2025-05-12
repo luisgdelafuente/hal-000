@@ -56,9 +56,11 @@ export default function BlogPostsPage() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Blog Posts</h1>
-        <Link href="/admin/posts/new">
-          <Button>New Post</Button>
-        </Link>
+        <Button asChild>
+          <Link href="/admin/posts/new/">
+            New Post
+          </Link>
+        </Button>
       </div>
 
       <Table>
@@ -87,11 +89,11 @@ export default function BlogPostsPage() {
                       <Eye className="h-4 w-4" />
                     </Button>
                   </Link>
-                  <Link href={`/admin/posts/${post.slug}`}>
-                    <Button variant="ghost" size="icon">
+                  <Button variant="outline" size="icon" asChild>
+                    <Link href={`/admin/posts/${post.slug}/`}>
                       <Edit className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"

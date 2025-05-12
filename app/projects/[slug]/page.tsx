@@ -65,27 +65,30 @@ export default async function ProjectPage({ params }: PageProps) {
 
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
-      <Link 
-        href="/projects/" 
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
-      >
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        Back to projects
-      </Link>
       
-      <h1 className="text-4xl font-bold tracking-tight mb-4">{project.title}</h1>
-      <p className="text-lg text-muted-foreground mb-8">{project.description}</p>
-      
-      <div className="relative h-[400px] rounded-xl overflow-hidden mb-12">
-        <Image 
-          src={project.image_url} 
-          alt={project.title}
-          fill
-          className="object-cover"
-        />
+      <div className="max-w-3xl mx-auto">
+        <Link 
+          href="/projects/" 
+          className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
+        >
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Back to projects
+        </Link>
+        
+        <h1 className="text-4xl font-bold tracking-tight mb-4">{project.title}</h1>
+        <p className="text-lg text-muted-foreground mb-8">{project.description}</p>
+        
+        <div className="relative h-[400px] rounded-xl overflow-hidden mb-12">
+          <Image 
+            src={project.image_url} 
+            alt={project.title}
+            fill
+            className="object-cover"
+          />
+        </div>
+        
+        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: project.content }} />
       </div>
-      
-      <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: project.content }} />
     </div>
   );
 }

@@ -72,11 +72,11 @@ export default function PagesPage() {
                         </svg>
                       </Button>
                     </Link>
-                    <Link href={`/admin/pages/${page.page}`}>
-                      <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" asChild>
+                      <Link href={`/admin/pages/${page.page}/`}>
                         <Edit className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

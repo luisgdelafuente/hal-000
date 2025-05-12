@@ -66,17 +66,18 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
-      <Link 
-        href="/blog/" 
-        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
-      >
-        <ChevronLeft className="h-4 w-4 mr-1" />
-        Back to blog
-      </Link>
       
       <article>
         <div className="max-w-3xl mx-auto">
-          <time className="text-sm text-muted-foreground">
+          <Link 
+            href="/blog/" 
+            className="flex items-center text-sm text-muted-foreground hover:text-foreground mb-8"
+          >
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to blog
+          </Link>
+          
+          <time className="block text-sm text-muted-foreground">
             {formatDate(post.published_at)}
           </time>
           

@@ -60,12 +60,12 @@ export default function ProjectsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Projects</h1>
-        <Link href="/admin/projects/new">
-          <Button>
+        <Button asChild>
+          <Link href="/admin/projects/new/">
             <Plus className="mr-2 h-4 w-4" />
             Add Project
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       <div className="rounded-md border">
@@ -95,11 +95,11 @@ export default function ProjectsPage() {
                         </svg>
                       </Button>
                     </Link>
-                    <Link href={`/admin/projects/${project.slug}`}>
-                      <Button variant="outline" size="icon">
+                    <Button variant="outline" size="icon" asChild>
+                      <Link href={`/admin/projects/${project.slug}/`}>
                         <Edit className="h-4 w-4" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                     <Button
                       variant="outline"
                       size="icon"
