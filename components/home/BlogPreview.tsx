@@ -6,15 +6,9 @@ import { ArrowRight } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { useState, useEffect } from 'react';
 import { getBlogPosts } from '@/lib/api';
+import type { BlogPost as BlogPostType } from '@/lib/supabase';
 
-type BlogPost = {
-  title: string;
-  slug: string;
-  published_at: string;
-  image_url: string;
-  excerpt: string;
-  content: string;
-};
+type BlogPost = BlogPostType;
 
 const BlogPreview = () => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
@@ -22,9 +16,14 @@ const BlogPreview = () => {
 
   useEffect(() => {
     async function fetchPosts() {
-      const posts = await getBlogPosts();
-      setBlogPosts(posts.slice(0, 3));
-      setIsLoading(false);
+      try {
+        const posts = await getBlogPosts(3);
+        setBlogPosts(posts);
+      } catch (error) {
+        console.error("Failed to fetch blog posts:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchPosts();
   }, []);
@@ -72,7 +71,7 @@ const BlogPreview = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {blogPosts.map((post, index) => (
             <article 
-              key={index} 
+              key={post.id} 
               className="group overflow-hidden rounded-xl border border-border/40 shadow-sm hover:shadow-md transition-all min-h-[380px]"
               style={{ backgroundColor: 'white' }}
             >

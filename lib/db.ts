@@ -2,11 +2,18 @@ import { supabase } from './supabase'
 import type { BlogPost, ContactMessage, PageContent, Project, User, Waitlist } from './supabase'
 
 // Projects
-export async function getProjects() {
-  const { data, error } = await supabase
+export async function getProjects(options?: { limit?: number }) {
+  let query = supabase
     .from('projects')
     .select('*')
-    .order('id', { ascending: false })
+    .order('id', { ascending: false });
+
+  // Apply limit if provided
+  if (options?.limit) {
+    query = query.limit(options.limit);
+  }
+
+  const { data, error } = await query;
   
   if (error) throw error
   return data as Project[]
@@ -56,11 +63,18 @@ export async function deleteProject(id: number) {
 }
 
 // Blog Posts
-export async function getBlogPosts() {
-  const { data, error } = await supabase
+export async function getBlogPosts(options?: { limit?: number }) {
+  let query = supabase
     .from('blog_posts')
     .select('*')
-    .order('published_at', { ascending: false })
+    .order('published_at', { ascending: false });
+
+  // Apply limit if provided
+  if (options?.limit) {
+    query = query.limit(options.limit);
+  }
+  
+  const { data, error } = await query;
   
   if (error) throw error
   return data as BlogPost[]
@@ -184,6 +198,16 @@ export async function getAllWaitlist() {
 
   if (error) throw error;
   return data as Waitlist[];
+}
+
+// Services
+export async function getServices() {
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('id', { ascending: true });
+  if (error) throw error;
+  return data;
 }
 
 // Admin Functions

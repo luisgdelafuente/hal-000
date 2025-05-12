@@ -4,12 +4,20 @@ export async function getProjects() {
   return getSupabaseProjects();
 }
 
+// Add function to get limited number of featured projects
+export async function getFeaturedProjects(limit: number = 3) {
+  // Assuming getSupabaseProjects accepts a limit and returns the latest
+  return getSupabaseProjects({ limit });
+}
+
 export async function getProject(slug: string) {
   return getProjectBySlug(slug);
 }
 
-export async function getBlogPosts() {
-  return getSupabaseBlogPosts();
+// Modify getBlogPosts to accept an optional limit
+export async function getBlogPosts(limit?: number) {
+  // Assuming getSupabaseBlogPosts accepts a limit and returns the latest
+  return getSupabaseBlogPosts({ limit });
 }
 
 export async function getBlogPost(slug: string) {
