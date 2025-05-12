@@ -34,7 +34,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export const revalidate = 3600; // Revalidate every hour
+
+export default async function HomePage() {
   return (
     <main className="flex min-h-screen flex-col">
       <Hero />

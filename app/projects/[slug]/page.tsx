@@ -5,6 +5,8 @@ import { ChevronLeft } from 'lucide-react';
 import { getProject, getProjects } from '@/lib/api';
 import type { Metadata } from 'next';
 
+export const revalidate = 3600; // Revalidate every hour
+
 interface PageProps {
   params: {
     slug: string;

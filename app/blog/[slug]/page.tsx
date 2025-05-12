@@ -6,6 +6,8 @@ import { getBlogPost, getBlogPosts } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
 
+export const revalidate = 3600; // Revalidate every hour
+
 interface PageProps {
   params: {
     slug: string;

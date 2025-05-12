@@ -27,6 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 3600; // Revalidate every hour
+
 const industries = ["All", "Finance", "Healthcare", "Manufacturing"];
 
 export default async function ProjectsPage() {
