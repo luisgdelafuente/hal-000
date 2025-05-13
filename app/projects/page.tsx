@@ -2,34 +2,38 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { getProjects } from '@/lib/api';
-
-export const metadata: Metadata = {
-  title: 'Projects | HAL149',
-  description: 'Explore our AI projects and case studies across various industries.',
-  openGraph: {
-    title: 'HAL149 Projects',
-    description: 'Explore our AI projects and case studies across various industries.',
-    url: 'https://hal149.com/projects/',
-    images: [
-      {
-        url: 'https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'HAL149 Projects',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'HAL149 Projects',
-    description: 'Explore our AI projects and case studies across various industries.',
-    images: ['https://images.pexels.com/photos/7567443/pexels-photo-7567443.jpeg'],
-  },
-};
+import { getSeoMetadata } from '@/lib/metadata';
 
 export const revalidate = 3600; // Revalidate every hour
 
 const industries = ["All", "Finance", "Healthcare", "Manufacturing"];
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'projects_listing'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/projects`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/projects`, 
+    }
+  };
+}
 
 export default async function ProjectsPage() {
   const projects = await getProjects();

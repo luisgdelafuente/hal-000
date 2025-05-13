@@ -5,36 +5,38 @@ import FeaturedProjects from '@/components/home/FeaturedProjects';
 import BlogPreview from '@/components/home/BlogPreview';
 import Newsletter from '@/components/common/Newsletter';
 import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'HAL149 - Unlocking Your Business Potential with AI',
-  description: 'Transform your business with AI-powered solutions for strategy, automation, and application development.',
-  openGraph: {
-    title: 'HAL149 - Unlocking Your Business Potential with AI',
-    description: 'Transform your business with AI-powered solutions for strategy, automation, and application development.',
-    url: 'https://hal149.com',
-    siteName: 'HAL149',
-    images: [
-      {
-        url: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'HAL149 - AI Services',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'HAL149 - Unlocking Your Business Potential with AI',
-    description: 'Transform your business with AI-powered solutions for strategy, automation, and application development.',
-    images: ['https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg'],
-    creator: '@hal149',
-  },
-};
+import { getSeoMetadata } from '@/lib/metadata';
 
 export const revalidate = 3600; // Revalidate every hour
+
+export async function generateMetadata(): Promise<Metadata> {
+  // For the home page, the 'identifier' in getSeoMetadata is 'home'
+  const seoData = await getSeoMetadata('home', 'home'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title,
+    description: seoData.description,
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: siteUrl || undefined, // URL of the home page
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+      // site: '@yourTwitterHandle', // Optional
+    },
+    alternates: {
+      canonical: siteUrl || undefined, // Canonical URL for the home page
+    }
+  };
+}
 
 export default async function HomePage() {
   return (

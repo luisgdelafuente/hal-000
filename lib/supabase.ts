@@ -21,6 +21,11 @@ export type BlogPost = {
   content: string
   image_url: string
   published_at: string
+  // New optional meta fields
+  meta_title?: string | null;
+  meta_description?: string | null;
+  meta_keywords?: string | null;
+  og_image_url?: string | null;
 }
 
 export type ContactMessage = {
@@ -38,6 +43,11 @@ export type PageContent = {
   page: string
   content: any // jsonb type
   updated_at: string
+  // New optional meta fields
+  meta_title?: string | null;
+  meta_description?: string | null;
+  meta_keywords?: string | null;
+  og_image_url?: string | null;
 }
 
 export type Project = {
@@ -51,6 +61,11 @@ export type Project = {
   is_featured: boolean | null
   github_url: string | null
   demo_url: string | null
+  // New optional meta fields
+  meta_title?: string | null;
+  meta_description?: string | null;
+  meta_keywords?: string | null;
+  og_image_url?: string | null;
 }
 
 export type User = {
@@ -82,4 +97,4 @@ export type Testimonial = {
   image_url: string
   created_at: string
   updated_at: string
-} 
+}

@@ -3,32 +3,36 @@ import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 import { Metadata } from 'next';
 import { getBlogPosts } from '@/lib/api';
-
-export const metadata: Metadata = {
-  title: 'Blog | HAL149',
-  description: 'Latest insights and articles on AI, machine learning, and technology trends.',
-  openGraph: {
-    title: 'HAL149 Blog',
-    description: 'Latest insights and articles on AI, machine learning, and technology trends.',
-    url: 'https://hal149.com/blog/',
-    images: [
-      {
-        url: 'https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'HAL149 Blog',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'HAL149 Blog',
-    description: 'Latest insights and articles on AI, machine learning, and technology trends.',
-    images: ['https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg'],
-  },
-};
+import { getSeoMetadata } from '@/lib/metadata';
 
 export const revalidate = 3600; // Revalidate every hour
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'blog_listing'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/blog`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/blog`, 
+    }
+  };
+}
 
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts();

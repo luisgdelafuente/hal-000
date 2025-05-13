@@ -22,7 +22,7 @@ export async function getProjects(options?: { limit?: number }) {
 export async function getProjectBySlug(slug: string) {
   const { data, error } = await supabase
     .from('projects')
-    .select('*')
+    .select('id, title, slug, description, content, category, image_url, is_featured, github_url, demo_url, meta_title, meta_description, meta_keywords, og_image_url')
     .eq('slug', slug)
     .single()
   
@@ -83,7 +83,7 @@ export async function getBlogPosts(options?: { limit?: number }) {
 export async function getBlogPostBySlug(slug: string) {
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('*')
+    .select('id, title, slug, excerpt, content, image_url, published_at, meta_title, meta_description, meta_keywords, og_image_url')
     .eq('slug', slug)
     .single()
   
@@ -127,7 +127,7 @@ export async function deleteBlogPost(id: number) {
 export async function getPageContent(page: string) {
   const { data, error } = await supabase
     .from('page_contents')
-    .select('*')
+    .select('id, page, content, meta_title, meta_description, meta_keywords, og_image_url')
     .eq('page', page)
     .single()
   

@@ -1,9 +1,32 @@
 import { Metadata } from 'next';
+import { getSeoMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Terms of Service | HAL149',
-  description: 'HAL149 Terms of Service - The legal agreement between you and HAL149.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'terms'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/terms`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/terms`, 
+    }
+  };
+}
 
 export default function TermsPage() {
   return (

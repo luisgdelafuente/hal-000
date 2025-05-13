@@ -4,9 +4,10 @@ import { notFound } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { getBlogPost, getBlogPosts } from '@/lib/api';
 import { formatDate } from '@/lib/utils';
+import { getSeoMetadata } from '@/lib/metadata';
+import { getBlogPostBySlug } from '@/lib/db';
 import type { Metadata } from 'next';
-
-export const revalidate = 3600; // Revalidate every hour
+import type { BlogPost } from '@/lib/supabase';
 
 interface PageProps {
   params: {
@@ -14,46 +15,50 @@ interface PageProps {
   };
 }
 
+export const revalidate = 3600; // Revalidate every hour
+
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
-  return posts.map((post) => ({
+  if (!posts) return [];
+  return posts.map((post: BlogPost) => ({
     slug: post.slug,
   }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
-  
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const seoData = await getSeoMetadata('blogPost', params.slug);
+  const post = await getBlogPostBySlug(params.slug);
+
   if (!post) {
     return {
-      title: 'Post Not Found | HAL149',
-      description: 'The requested blog post could not be found.',
+      title: 'Post Not Found',
+      description: 'The blog post you are looking for does not exist.',
     };
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
   return {
-    title: `${post.title} | HAL149 Blog`,
-    description: post.excerpt,
+    title: seoData.title,
+    description: seoData.description,
+    keywords: seoData.keywords,
     openGraph: {
-      title: post.title,
-      description: post.excerpt,
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
       type: 'article',
-      url: `https://hal149.com/blog/${post.slug}/`,
-      images: [
-        {
-          url: post.image_url,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
+      publishedTime: post.published_at || undefined,
+      url: `${siteUrl}/blog/${post.slug}`,
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.excerpt,
-      images: [post.image_url],
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
     },
+    alternates: {
+      canonical: `${siteUrl}/blog/${post.slug}`,
+    }
   };
 }
 

@@ -1,9 +1,32 @@
 import { Metadata } from 'next';
+import { getSeoMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'Privacy Policy | HAL149',
-  description: 'HAL149 Privacy Policy - How we collect, use, and protect your data.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'privacy'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/privacy`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/privacy`, 
+    }
+  };
+}
 
 export default function PrivacyPage() {
   return (

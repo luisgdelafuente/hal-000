@@ -1,30 +1,34 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { Metadata } from 'next';
+import { getSeoMetadata } from '@/lib/metadata';
 import ContactForm from '../components/contact/ContactForm';
 
-export const metadata: Metadata = {
-  title: 'Contact | HAL149',
-  description: 'Get in touch with HAL149 for AI solutions tailored to your business needs.',
-  openGraph: {
-    title: 'Contact HAL149',
-    description: 'Get in touch with HAL149 for AI solutions tailored to your business needs.',
-    url: 'https://hal149.com/contact',
-    images: [
-      {
-        url: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'Contact HAL149',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Contact HAL149',
-    description: 'Get in touch with HAL149 for AI solutions tailored to your business needs.',
-    images: ['https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg'],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'contact'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/contact`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/contact`, 
+    }
+  };
+}
 
 export default function ContactPage() {
   return (

@@ -1,29 +1,33 @@
 import Image from 'next/image';
 import { Metadata } from 'next';
+import { getSeoMetadata } from '@/lib/metadata';
 
-export const metadata: Metadata = {
-  title: 'About | HAL149',
-  description: 'Learn about HAL149 and our mission to transform businesses with AI.',
-  openGraph: {
-    title: 'About HAL149',
-    description: 'Learn about HAL149 and our mission to transform businesses with AI.',
-    url: 'https://hal149.com/about',
-    images: [
-      {
-        url: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg',
-        width: 1200,
-        height: 630,
-        alt: 'HAL149 Team',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'About HAL149',
-    description: 'Learn about HAL149 and our mission to transform businesses with AI.',
-    images: ['https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg'],
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seoData = await getSeoMetadata('page', 'about'); 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+
+  return {
+    title: seoData.title, 
+    description: seoData.description, 
+    keywords: seoData.keywords,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      images: [{ url: seoData.ogImage }],
+      type: 'website',
+      url: `${siteUrl}/about`, 
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seoData.title,
+      description: seoData.description,
+      images: [seoData.ogImage],
+    },
+    alternates: {
+      canonical: `${siteUrl}/about`, 
+    }
+  };
+}
 
 export default function AboutPage() {
   return (
