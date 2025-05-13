@@ -21,10 +21,13 @@ import * as z from 'zod';
 const pageContentFormSchema = z.object({
   content: z.string().min(1, 'Content is required'),
   // SEO Metadata fields
-  meta_title: z.string().optional(),
-  meta_description: z.string().optional(),
-  meta_keywords: z.string().optional(),
-  og_image_url: z.string().url('Must be a valid URL').optional(),
+  meta_title: z.string().optional().default(''),
+  meta_description: z.string().optional().default(''),
+  meta_keywords: z.string().optional().default(''),
+  og_image_url: z.preprocess(
+    (val) => (val === '' ? undefined : val), 
+    z.string().url('Must be a valid URL').optional()
+  ),
 });
 
 export default function EditPageContentPage({ params }: { params: { page: string } }) {
