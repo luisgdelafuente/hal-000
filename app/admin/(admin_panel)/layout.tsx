@@ -1,25 +1,28 @@
+// app/admin/(admin_panel)/layout.tsx
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
   FileText, 
   BarChart, 
   Settings, 
   LayoutGrid, 
-  Users,
   Mail,
-  LogOut,
-  File,
   UserRound
 } from 'lucide-react';
+import { createSupabaseServerClient } from '@/lib/supabase/server'; 
+import { cookies } from 'next/headers'; 
+import LogoutButton from './components/LogoutButton'; 
 
 interface AdminLayoutProps {
   children: ReactNode;
 }
 
-const AdminLayout = ({ children }: AdminLayoutProps) => {
+const AdminLayout = async ({ children }: AdminLayoutProps) => { 
+  const cookieStore = cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
+  const { data: { user } } = await supabase.auth.getUser();
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex h-full">
@@ -29,7 +32,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
             <div className="flex-1 overflow-auto py-2">
               <nav className="grid items-start px-2 text-sm font-medium">
                 <Link
-                  href="/admin"
+                  href="/admin" 
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                 >
                   <LayoutDashboard className="h-4 w-4" />
@@ -80,13 +83,12 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               </nav>
             </div>
             <div className="mt-auto p-4">
-              <Button variant="outline" className="w-full">
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-              <div className="mt-4 text-xs text-muted-foreground">
-                Logged in as <span className="font-medium">admin</span>
-              </div>
+              <LogoutButton /> 
+              {user && (
+                <div className="mt-4 text-xs text-muted-foreground">
+                  Logged in as <span className="font-medium">{user.email}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

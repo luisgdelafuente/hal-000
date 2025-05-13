@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = ".next" # While dev doesn't strictly publish, this aligns with build
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs" # Essential for Next.js features on Netlify-like platforms
