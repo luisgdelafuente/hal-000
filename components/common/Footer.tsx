@@ -12,7 +12,7 @@ const Footer = () => {
               Empowering the future with intelligent solutions.
             </p>
             <p className="text-xs text-muted-foreground/80">
-              © 2025 HAL149. All rights reserved.
+              2025 HAL149. All rights reserved.
             </p>
           </div>
           
@@ -42,36 +42,6 @@ const Footer = () => {
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     Legal
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="space-y-4">
-              <h3 className="text-sm font-medium">Resources</h3>
-              <ul className="space-y-3">
-                <li>
-                  <Link 
-                    href="/documentation" 
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Documentation
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/api-reference" 
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    API Reference
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/support" 
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    Support
                   </Link>
                 </li>
               </ul>
