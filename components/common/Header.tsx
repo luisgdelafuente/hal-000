@@ -1,49 +1,57 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Globe } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Handle menu state, body scroll, and keyboard/resize events
+  const [scrolled, setScrolled] = useState(false);
+  
+  // Handle scroll effect for better visual experience
   useEffect(() => {
-    // Prevent scrolling when menu is open
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close mobile menu when screen size changes to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen]);
+
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
-
-    // Close menu on Escape key press
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    // Close menu on resize to desktop
-    const handleResize = () => {
-      if (window.innerWidth >= 768) { // md breakpoint
-        setIsMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleEscape);
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup
     return () => {
       document.body.style.overflow = '';
-      window.removeEventListener('keydown', handleEscape);
-      window.removeEventListener('resize', handleResize);
     };
   }, [isMenuOpen]);
 
+  const navLinks = [
+    { href: '/projects/', label: 'Projects' },
+    { href: '/blog/', label: 'Blog' },
+    { href: '/about/', label: 'About' },
+    { href: '/contact/', label: 'Contact' }
+  ];
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-300 bg-white dark:bg-slate-900 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b border-slate-300 bg-white backdrop-blur supports-[backdrop-filter]:bg-background/60 ${scrolled ? 'shadow-sm' : ''}`}>
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
@@ -58,45 +66,28 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link 
-            href="/projects/" 
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Projects
-          </Link>
-          <Link 
-            href="/blog/" 
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Blog
-          </Link>
-          <Link 
-            href="/about/" 
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            About
-          </Link>
-          <Link 
-            href="/contact/" 
-            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Contact
-          </Link>
+        {/* Desktop Navigation - hidden on mobile */}
+        <nav className="hidden md:flex items-center space-x-4 lg:space-x-8">
+          {navLinks.map((link) => (
+            <Link 
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
+          ))}
           <div className="flex items-center space-x-1 border-l pl-4 ml-2">
             <Globe className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium">EN</span>
           </div>
         </nav>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile menu button - visible only on mobile */}
         <button 
-          className="md:hidden p-2 rounded-md text-muted-foreground hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          className="md:hidden flex items-center text-slate-700"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-menu"
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
         >
           {isMenuOpen ? (
             <X className="h-6 w-6" />
@@ -104,76 +95,36 @@ const Header = () => {
             <Menu className="h-6 w-6" />
           )}
         </button>
+      </div>
 
-        {/* Mobile Menu and Overlay */}
-        {isMenuOpen && (
-          <>
-            {/* Overlay - covers the entire screen and closes menu when clicked */}
-            <div 
-              className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden" 
-              onClick={() => setIsMenuOpen(false)}
-              aria-hidden="true"
-            />
-            
-            {/* Slide-in Menu Panel */}
-            <div 
-              id="mobile-menu"
-              className="fixed top-0 right-0 z-50 h-full w-3/4 max-w-sm bg-white dark:bg-slate-900 shadow-lg md:hidden"
-              role="dialog"
-              aria-modal="true"
-            >
-              {/* Menu Content */}
-              <nav className="p-6 pt-16">
-                <ul className="space-y-6">
-                  <li>
-                    <Link 
-                      href="/projects/" 
-                      className="block text-lg font-medium hover:text-primary transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Projects
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
-                      href="/blog/" 
-                      className="block text-lg font-medium hover:text-primary transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Blog
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
-                      href="/about/" 
-                      className="block text-lg font-medium hover:text-primary transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
-                      href="/contact/" 
-                      className="block text-lg font-medium hover:text-primary transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Contact
-                    </Link>
-                  </li>
-                </ul>
-                
-                {/* Language Selector */}
-                <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center space-x-2">
-                    <Globe className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-lg font-medium">EN</span>
-                  </div>
-                </div>
-              </nav>
+      {/* Mobile menu overlay */}
+      {isMenuOpen && (
+        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)} />
+      )}
+
+      {/* Mobile menu drawer */}
+      <div 
+        className={`md:hidden fixed top-16 right-0 bottom-0 w-full sm:w-80 z-50 transform transition-transform duration-300 ease-in-out shadow-xl ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{ backgroundColor: 'white' }}
+      >
+        <nav className="flex flex-col h-full py-6 px-6 bg-white">
+          <div className="space-y-6 flex flex-col">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.href}
+                href={link.href}
+                className="text-lg font-medium py-2 text-slate-800 border-b border-slate-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="flex items-center space-x-2 py-4 mt-auto">
+              <Globe className="h-5 w-5 text-muted-foreground" />
+              <span className="text-base font-medium">EN</span>
             </div>
-          </>
-        )}
+          </div>
+        </nav>
       </div>
     </header>
   );
