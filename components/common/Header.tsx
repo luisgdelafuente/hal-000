@@ -104,10 +104,9 @@ const Header = () => {
 
       {/* Mobile menu drawer */}
       <div 
-        className={`md:hidden fixed top-16 right-0 bottom-0 w-full sm:w-80 z-50 transform transition-transform duration-300 ease-in-out shadow-xl ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
-        style={{ backgroundColor: 'white' }}
+        className={`md:hidden fixed top-16 right-0 bottom-0 w-full sm:w-80 bg-white opacity-100 z-50 transform transition-transform duration-300 ease-in-out shadow-xl ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        <nav className="flex flex-col h-full py-6 px-6 bg-white">
+        <nav className="flex flex-col h-full py-6 px-6">
           <div className="space-y-6 flex flex-col">
             {navLinks.map((link) => (
               <Link 
