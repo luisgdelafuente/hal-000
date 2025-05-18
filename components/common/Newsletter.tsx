@@ -27,7 +27,7 @@ const Newsletter = () => {
   };
 
   return (
-    <section className="w-full py-20 border-t border-border/40">
+    <section id="waitlist" className="w-full py-20 border-t border-border/40">
       <div className="container mx-auto px-4 sm:px-8 max-w-3xl text-center">
         <h2 className="text-3xl font-bold tracking-tight mb-4">Join the Waitlist</h2>
         <p className="text-muted-foreground mb-8">
