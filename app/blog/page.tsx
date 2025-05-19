@@ -34,15 +34,30 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { getPageContent } from '@/lib/db';
+
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts();
+  let content = { title: 'Our Blog', subtitle: 'Stay updated with the latest insights in AI and technology.' };
+  try {
+    const pageData = await getPageContent('blog_listing');
+    if (pageData && pageData.content) {
+      if (typeof pageData.content === 'string') {
+        content = JSON.parse(pageData.content);
+      } else {
+        content = pageData.content;
+      }
+    }
+  } catch (err) {
+    // fallback to mock content
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
       <div className="max-w-3xl mx-auto mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Our Blog</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-4">{content.title}</h1>
         <p className="text-lg text-muted-foreground">
-          Stay updated with the latest insights in AI and technology
+          {content.subtitle}
         </p>
       </div>
       

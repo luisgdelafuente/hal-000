@@ -19,14 +19,21 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const pageContentFormSchema = z.object({
-  content: z.string().min(1, 'Content is required'),
+  content: z.string().min(1, 'Content is required').refine((val) => {
+    try {
+      JSON.parse(val);
+      return true;
+    } catch {
+      return false;
+    }
+  }, { message: 'Content must be valid JSON.' }),
   // SEO Metadata fields
   meta_title: z.string().optional().default(''),
   meta_description: z.string().optional().default(''),
   meta_keywords: z.string().optional().default(''),
   og_image_url: z.preprocess(
     (val) => (val === '' ? undefined : val), 
-    z.string().url('Must be a valid URL').optional()
+    z.string().url('Must be a valid URL').optional().or(z.literal(''))
   ),
 });
 
@@ -52,8 +59,28 @@ export default function EditPageContentPage({ params }: { params: { page: string
       try {
         const data = await getPageContent(params.page);
         setPageContent(data);
+        let contentString = '';
+        if (!data || !data.content) {
+          // Provide mock content for new pages
+          if (params.page === 'about') {
+            contentString = JSON.stringify({ title: 'About Us', vision: 'Our mission is to empower users with AI.' }, null, 2);
+          } else if (params.page === 'legal') {
+            contentString = JSON.stringify({ title: 'Legal Information', sections: [{ title: 'Terms', content: 'Sample legal terms.' }] }, null, 2);
+          } else if (params.page === 'privacy') {
+            contentString = JSON.stringify({ title: 'Privacy Policy', sections: [{ title: 'Introduction', content: 'Your privacy matters.' }] }, null, 2);
+          } else if (params.page === 'terms') {
+            contentString = JSON.stringify({ title: 'Terms of Service', sections: [{ title: 'Agreement', content: 'These are the terms.' }] }, null, 2);
+          } else {
+            contentString = JSON.stringify({ title: params.page, content: '' }, null, 2);
+          }
+        } else if (typeof data.content === 'string') {
+          contentString = data.content;
+        } else {
+          // If content is an object, stringify it for editing
+          contentString = JSON.stringify(data.content, null, 2);
+        }
         form.reset({
-          content: data.content,
+          content: contentString,
           meta_title: data.meta_title || '',
           meta_description: data.meta_description || '',
           meta_keywords: data.meta_keywords || '',
@@ -70,7 +97,12 @@ export default function EditPageContentPage({ params }: { params: { page: string
 
   async function onSubmit(values: z.infer<typeof pageContentFormSchema>) {
     try {
-      await updatePageContent(pageContent.id, values);
+      // Always save content as a JSON string
+      const toSave = {
+        ...values,
+        content: JSON.stringify(JSON.parse(values.content)), // Ensure valid JSON string
+      };
+      await updatePageContent(pageContent.id, toSave);
 
       // Revalidate the path
       const revalidationSecret = process.env.NEXT_PUBLIC_REVALIDATION_SECRET;
@@ -187,11 +219,11 @@ export default function EditPageContentPage({ params }: { params: { page: string
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Content</FormLabel>
+                <FormLabel>Content (JSON)</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Page content"
-                    className="min-h-[400px]"
+                    placeholder='{"title": "Page Title", "subtitle": "Page subtitle", ...}'
+                    className="min-h-[400px] font-mono"
                     {...field}
                   />
                 </FormControl>

@@ -7,7 +7,12 @@ import { useState, useEffect } from 'react';
 import { getFeaturedProjects } from '@/lib/api';
 import type { Project } from '@/lib/supabase';
 
-const FeaturedProjects = () => {
+interface FeaturedProjectsSection {
+  title?: string;
+  subtitle?: string;
+}
+
+const FeaturedProjects = ({ section }: { section?: FeaturedProjectsSection }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,9 +64,9 @@ const FeaturedProjects = () => {
       <div className="container mx-auto px-4 sm:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Featured Projects</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">{section?.title || 'Featured Projects'}</h2>
             <p className="text-muted-foreground max-w-2xl">
-              Discover how our AI solutions are transforming industries and driving tangible business results.
+              {section?.subtitle || 'Discover how our AI solutions are transforming industries and driving tangible business results.'}
             </p>
           </div>
           <Link 

@@ -4,7 +4,14 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { addToWaitlist } from '@/lib/db';
 
-const Newsletter = () => {
+interface NewsletterSection {
+  title?: string;
+  subtitle?: string;
+  placeholder?: string;
+  button?: string;
+}
+
+const Newsletter = ({ section }: { section?: NewsletterSection }) => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -29,9 +36,9 @@ const Newsletter = () => {
   return (
     <section id="waitlist" className="w-full py-20 border-t border-border/40">
       <div className="container mx-auto px-4 sm:px-8 max-w-3xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight mb-4">Join the Waitlist</h2>
+        <h2 className="text-3xl font-bold tracking-tight mb-4">{section?.title || 'Join the Waitlist'}</h2>
         <p className="text-muted-foreground mb-8">
-          Be the first to experience the future of AI. Sign up for early access.
+          {section?.subtitle || 'Be the first to experience the future of AI. Sign up for early access.'}
         </p>
         
         {isSuccess ? (
@@ -44,7 +51,7 @@ const Newsletter = () => {
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
-                placeholder="Enter your email"
+                placeholder={section?.placeholder || 'Enter your email'}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -55,7 +62,7 @@ const Newsletter = () => {
                 disabled={isSubmitting}
                 className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring h-10 px-4 py-2 bg-primary text-primary-foreground shadow hover:bg-primary/90 disabled:opacity-50"
               >
-                {isSubmitting ? 'Joining...' : 'Join Waitlist'}
+                {isSubmitting ? (section?.button || 'Joining...') : (section?.button || 'Join Waitlist')}
               </button>
             </div>
             {error && (

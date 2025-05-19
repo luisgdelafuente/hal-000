@@ -38,14 +38,57 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { getPageContent } from '@/lib/db';
+
 export default async function HomePage() {
+  let content = {
+    hero: {
+      badge: 'Welcome to HAL149!',
+      title: 'Next-Gen AI for Real Business',
+      subtitle: 'Empower your company with industry-specific AI solutions. Automate, analyze, and grow.',
+      cta1: { label: 'Explore Solutions', href: '/projects' },
+      cta2: { label: 'Contact Us', href: '/contact' }
+    },
+    features: [
+      { title: 'No-Code Automation', description: 'Build and deploy workflows with a simple drag-and-drop interface.' },
+      { title: 'Custom AI Models', description: 'Train, fine-tune, and deploy models tailored to your business needs.' },
+      { title: '24/7 Support', description: 'Our team is always available to help you succeed with AI.' }
+    ],
+    featuredProjects: {
+      title: 'Featured Projects',
+      subtitle: 'See how our clients use HAL149 AI in the real world'
+    },
+    blogPreview: {
+      title: 'From Our Blog',
+      subtitle: 'Latest insights and updates from our team'
+    },
+    newsletter: {
+      title: 'Stay in the Loop',
+      subtitle: 'Subscribe to our newsletter for AI news and updates',
+      placeholder: 'Enter your email',
+      button: 'Subscribe'
+    }
+  };
+  try {
+    const pageData = await getPageContent('home');
+    if (pageData && pageData.content) {
+      if (typeof pageData.content === 'string') {
+        content = JSON.parse(pageData.content);
+      } else {
+        content = pageData.content;
+      }
+    }
+  } catch (err) {
+    // fallback to mock content
+  }
+
   return (
     <main className="flex min-h-screen flex-col">
-      <Hero />
-      <Features />
-      <FeaturedProjects />
-      <BlogPreview />
-      <Newsletter />
+      <Hero content={content.hero} />
+      <Features features={content.features} />
+      <FeaturedProjects section={content.featuredProjects} />
+      <BlogPreview section={content.blogPreview} />
+      <Newsletter section={content.newsletter} />
     </main>
   );
 }

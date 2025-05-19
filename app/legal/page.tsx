@@ -7,22 +7,7 @@ import { notFound } from 'next/navigation';
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const pageData = await getPageContent('legal');
-
-  if (!pageData) {
-    // Fallback metadata if pageData is not found, or you can choose to throw an error
-    return getSeoMetadata({
-      title: 'Legal Information',
-      description: 'Privacy Policy and Terms of Service.',
-    });
-  }
-
-  return getSeoMetadata({
-    title: pageData.meta_title || 'Legal Information',
-    description: pageData.meta_description || 'Our Privacy Policy and Terms of Service.',
-    keywords: pageData.meta_keywords ? pageData.meta_keywords.split(',').map(k => k.trim()) : ['legal', 'privacy', 'terms'],
-    og_image_url: pageData.og_image_url,
-  });
+  return getSeoMetadata('page', 'legal');
 }
 
 interface Section {
@@ -49,22 +34,23 @@ function formatTextToHtml(text: string): string {
 export default async function LegalPage() {
   const pageData = await getPageContent('legal');
 
-  console.log('--- DEBUG: Raw pageData ---', pageData);
-
   if (!pageData || !pageData.content) {
-    console.error('--- DEBUG: pageData or pageData.content is missing ---');
-    notFound(); // Or display a more user-friendly message
+    notFound();
   }
 
-  console.log('--- DEBUG: pageData.content (before type assertion) ---', JSON.stringify(pageData.content, null, 2));
+  // Parse content as JSON if needed
+  let content: LegalContent | undefined = undefined;
+  if (typeof pageData.content === 'string') {
+    try {
+      content = JSON.parse(pageData.content);
+    } catch (e) {
+      content = undefined;
+    }
+  } else {
+    content = pageData.content as LegalContent;
+  }
 
-  const content = pageData.content as LegalContent;
-
-  console.log('--- DEBUG: content (after type assertion) ---', JSON.stringify(content, null, 2));
-  console.log('--- DEBUG: content.title ---', content.title);
-  console.log('--- DEBUG: content.sections ---', content.sections);
-
-  const pageTitle = content.title || pageData.meta_title || 'Legal Information';
+  const pageTitle = content?.title || pageData.meta_title || 'Legal Information';
 
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
@@ -73,9 +59,9 @@ export default async function LegalPage() {
           <h1 className="text-4xl font-bold tracking-tight mb-4">{pageTitle}</h1>
         </div>
         <article className="prose max-w-none mx-auto">
-          {content.sections && content.sections.length > 0 ? (
+          {content?.sections && content.sections.length > 0 ? (
             content.sections.map((section, index) => (
-              <section key={index} className={index < content.sections!.length - 1 ? "mb-12" : ""}>
+              <section key={index} className={index < content.sections.length - 1 ? "mb-12" : ""}>
                 <h2 className="text-2xl font-semibold mb-4 border-b pb-2 dark:border-slate-700">
                   {section.title}
                 </h2>

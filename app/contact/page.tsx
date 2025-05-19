@@ -29,13 +29,29 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function ContactPage() {
+import { getPageContent } from '@/lib/db';
+
+export default async function ContactPage() {
+  let content = { title: 'Contact Us', subtitle: 'Get in touch with our team for more information about our AI solutions.' };
+  try {
+    const pageData = await getPageContent('contact');
+    if (pageData && pageData.content) {
+      if (typeof pageData.content === 'string') {
+        content = JSON.parse(pageData.content);
+      } else {
+        content = pageData.content;
+      }
+    }
+  } catch (err) {
+    // fallback to mock content
+  }
+
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
       <div className="max-w-3xl mx-auto mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Contact Us</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-4">{content.title}</h1>
         <p className="text-lg text-muted-foreground">
-          Get in touch with our team for more information about our AI solutions
+          {content.subtitle}
         </p>
       </div>
       
