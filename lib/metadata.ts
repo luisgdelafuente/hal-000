@@ -81,6 +81,12 @@ export async function getSeoMetadata(
     throw new Error(`[metadata.ts] No SEO data found for ${itemType} ${identifier || ''}`);
   }
 
+  // DEBUG LOGGING for contact page
+  if (identifier === 'contact' || itemType === 'contact') {
+    console.log('[DEBUG] getSeoMetadata itemData:', itemData);
+    console.log('[DEBUG] getSeoMetadata meta_title:', itemData?.meta_title);
+  }
+
   // DEBUG LOGGING
   if (identifier === 'contact' || itemType === 'contact') {
     console.log('[DEBUG] getSeoMetadata itemData:', itemData);
