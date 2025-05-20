@@ -35,15 +35,29 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { getPageContent } from '@/lib/db';
+
 export default async function ProjectsPage() {
   const projects = await getProjects();
+  const pageData = await getPageContent('projects_listing');
+  let content: { title?: string; subtitle?: string } = {};
+  if (pageData && pageData.content) {
+    if (typeof pageData.content === 'string') {
+      content = JSON.parse(pageData.content);
+    } else {
+      content = pageData.content;
+    }
+  }
+  if (!content.title || !content.subtitle) {
+    throw new Error('Projects listing page content (title/subtitle) missing in database.');
+  }
 
   return (
     <div className="container mx-auto px-4 sm:px-8 py-12">
       <div className="max-w-3xl mx-auto mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Our Projects</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-4">{content.title}</h1>
         <p className="text-lg text-muted-foreground">
-          Explore how our AI solutions are transforming industries
+          {content.subtitle}
         </p>
       </div>
       

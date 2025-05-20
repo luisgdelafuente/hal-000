@@ -10,7 +10,12 @@ import type { BlogPost as BlogPostType } from '@/lib/supabase';
 
 type BlogPost = BlogPostType;
 
-const BlogPreview = () => {
+interface BlogPreviewSection {
+  title?: string;
+  subtitle?: string;
+}
+
+const BlogPreview = ({ section }: { section?: BlogPreviewSection }) => {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,9 +60,9 @@ const BlogPreview = () => {
       <div className="container mx-auto px-4 sm:px-8">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 min-h-[140px]">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight mb-4 min-h-[40px]">Latest from Our Blog</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4 min-h-[40px]">{section?.title || 'Latest from Our Blog'}</h2>
             <p className="text-muted-foreground max-w-2xl min-h-[24px]">
-              Stay updated with the latest insights in AI and technology
+              {section?.subtitle || 'Stay updated with the latest insights in AI and technology'}
             </p>
           </div>
           <Link 

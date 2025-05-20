@@ -129,10 +129,15 @@ export async function getPageContent(page: string) {
     .from('page_contents')
     .select('id, page, content, meta_title, meta_description, meta_keywords, og_image_url')
     .eq('page', page)
-    .single()
-  
-  if (error) throw error
-  return data as PageContent
+    .single();
+
+  // ONE-TIME DEBUG LOG
+  if (page === 'contact') {
+    console.log('[DEBUG] getPageContent raw data for contact:', data);
+  }
+
+  if (error) throw error;
+  return data as PageContent;
 }
 
 export async function updatePageContent(id: number, updates: Partial<PageContent>) {

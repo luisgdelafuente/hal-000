@@ -38,14 +38,30 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+import { getPageContent } from '@/lib/db';
+
 export default async function HomePage() {
+  const pageData = await getPageContent('home');
+  if (!pageData || !pageData.content) {
+    throw new Error('Home page content missing in database.');
+  }
+  let content;
+  if (typeof pageData.content === 'string') {
+    content = JSON.parse(pageData.content);
+  } else {
+    content = pageData.content;
+  }
+  if (!content || !content.hero || !content.features || !content.featuredProjects || !content.blogPreview || !content.newsletter) {
+    throw new Error('Home page content sections missing in database.');
+  }
+
   return (
     <main className="flex min-h-screen flex-col">
-      <Hero />
-      <Features />
-      <FeaturedProjects />
-      <BlogPreview />
-      <Newsletter />
+      <Hero content={content.hero} />
+      <Features features={content.features} />
+      <FeaturedProjects section={content.featuredProjects} />
+      <BlogPreview section={content.blogPreview} />
+      <Newsletter section={content.newsletter} />
     </main>
   );
 }

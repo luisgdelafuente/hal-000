@@ -35,7 +35,7 @@ const projectFormSchema = z.object({
   meta_keywords: z.string().optional().default(''),
   og_image_url: z.preprocess(
     (val) => (val === '' ? undefined : val), 
-    z.string().url('Must be a valid URL').optional()
+    z.string().url('Must be a valid URL').optional().or(z.literal(''))
   ),
 });
 
