@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 // if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
 //   throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_URL')
@@ -7,10 +7,18 @@ import { createClient } from '@supabase/supabase-js'
 //   throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY')
 // }
 
-export const supabase = createClient(
-  "https://spebrqnqmrmeacntsrmp.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwZWJycW5xbXJtZWFjbnRzcm1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzNjQ4ODYsImV4cCI6MjA1OTk0MDg4Nn0.TIihY4A0vhBQBG4sBJ7Y6yLvQJULVTxLFrDNU2mCjxU"
+export const supabase = createSupabaseClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
+
+// Helper for SSR/serverless usage
+export function createClient() {
+  return createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
 
 // Types for your database tables
 export type BlogPost = {
