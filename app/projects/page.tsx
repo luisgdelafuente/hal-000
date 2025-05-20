@@ -39,18 +39,17 @@ import { getPageContent } from '@/lib/db';
 
 export default async function ProjectsPage() {
   const projects = await getProjects();
-  let content = { title: 'Our Projects', subtitle: 'Explore how our AI solutions are transforming industries.' };
-  try {
-    const pageData = await getPageContent('projects_listing');
-    if (pageData && pageData.content) {
-      if (typeof pageData.content === 'string') {
-        content = JSON.parse(pageData.content);
-      } else {
-        content = pageData.content;
-      }
+  const pageData = await getPageContent('projects_listing');
+  let content: { title?: string; subtitle?: string } = {};
+  if (pageData && pageData.content) {
+    if (typeof pageData.content === 'string') {
+      content = JSON.parse(pageData.content);
+    } else {
+      content = pageData.content;
     }
-  } catch (err) {
-    // fallback to mock content
+  }
+  if (!content.title || !content.subtitle) {
+    throw new Error('Projects listing page content (title/subtitle) missing in database.');
   }
 
   return (

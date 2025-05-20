@@ -32,18 +32,17 @@ export async function generateMetadata(): Promise<Metadata> {
 import { getPageContent } from '@/lib/db';
 
 export default async function ContactPage() {
-  let content = { title: 'Contact Us', subtitle: 'Get in touch with our team for more information about our AI solutions.' };
-  try {
-    const pageData = await getPageContent('contact');
-    if (pageData && pageData.content) {
-      if (typeof pageData.content === 'string') {
-        content = JSON.parse(pageData.content);
-      } else {
-        content = pageData.content;
-      }
+  const pageData = await getPageContent('contact');
+  let content: { title?: string; subtitle?: string } = {};
+  if (pageData && pageData.content) {
+    if (typeof pageData.content === 'string') {
+      content = JSON.parse(pageData.content);
+    } else {
+      content = pageData.content;
     }
-  } catch (err) {
-    // fallback to mock content
+  }
+  if (!content.title || !content.subtitle) {
+    throw new Error('Contact page content (title/subtitle) missing in database.');
   }
 
   return (

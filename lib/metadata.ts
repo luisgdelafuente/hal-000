@@ -61,89 +61,68 @@ export async function getSeoMetadata(
   identifier?: string
 ): Promise<SeoData> {
   let itemData: Partial<Project | BlogPost | PageContent> | null = null;
-  const homeDefaults = await getHomePageDefaults();
 
-  try {
-    switch (itemType) {
-      case 'project':
-        if (identifier) itemData = await getProjectBySlug(identifier);
-        break;
-      case 'blogPost':
-        if (identifier) itemData = await getBlogPostBySlug(identifier);
-        break;
-      case 'page':
-      case 'home':
-      case 'projects_listing':
-      case 'blog_listing':
-        itemData = await getPageContent(identifier || itemType);
-        break;
-    }
-  } catch (error) {
-    console.error(`[metadata.ts] ERROR fetching SEO data for ${itemType} ${identifier || ''}:`, error);
-    itemData = null;
+  switch (itemType) {
+    case 'project':
+      if (identifier) itemData = await getProjectBySlug(identifier);
+      break;
+    case 'blogPost':
+      if (identifier) itemData = await getBlogPostBySlug(identifier);
+      break;
+    case 'page':
+    case 'home':
+    case 'projects_listing':
+    case 'blog_listing':
+      itemData = await getPageContent(identifier || itemType);
+      break;
   }
 
-  // Fallback helper
-  const fallback = <T>(primary: T | null | undefined, secondary: T | null | undefined, defaultValue: T): T => {
-    if (primary && String(primary).trim() !== '') return primary;
-    if (secondary && String(secondary).trim() !== '') return secondary;
-    return defaultValue;
-  };
+  if (!itemData) {
+    throw new Error(`[metadata.ts] No SEO data found for ${itemType} ${identifier || ''}`);
+  }
 
-  // 1. Meta Title (strict per-field fallback)
+  // DEBUG LOGGING
+  if (identifier === 'contact' || itemType === 'contact') {
+    console.log('[DEBUG] getSeoMetadata itemData:', itemData);
+    console.log('[DEBUG] getSeoMetadata meta_title:', itemData?.meta_title);
+  }
+
+  // 1. Meta Title
   let finalMetaTitle = (itemData?.meta_title && itemData.meta_title.trim() !== '')
     ? itemData.meta_title
     : (itemType === 'project' || itemType === 'blogPost') && (itemData as Project | BlogPost)?.title && (itemData as Project | BlogPost).title.trim() !== ''
       ? (itemData as Project | BlogPost).title
-      : (['page', 'home', 'projects_listing', 'blog_listing'].includes(itemType) && (itemData as PageContent)?.page && (itemData as PageContent).page.trim() !== '')
-        ? (itemData as PageContent).page
-        : (identifier ? identifier.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : homeDefaults.title || '');
+      : '';
   if (!finalMetaTitle || finalMetaTitle.trim() === '') {
-    finalMetaTitle = homeDefaults.title || '';
+    throw new Error(`[metadata.ts] No meta_title for ${itemType} ${identifier || ''}`);
   }
 
-  // 2. Meta Description (strict per-field fallback)
+  // 2. Meta Description
   let finalMetaDescription = (itemData?.meta_description && itemData.meta_description.trim() !== '')
     ? itemData.meta_description
-    : (() => {
-        let contentSource = '';
-        if (itemType === 'project' && (itemData as Project)?.description && (itemData as Project).description.trim() !== '') {
-          contentSource = (itemData as Project).description!;
-        } else if (itemType === 'blogPost' && (itemData as BlogPost)?.content && (itemData as BlogPost).content.trim() !== '') {
-          contentSource = (itemData as BlogPost).content!;
-          contentSource = contentSource.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-        } else if (
-          ['page', 'home', 'projects_listing', 'blog_listing'].includes(itemType)
-        ) {
-          const pageContent = (itemData as PageContent)?.content;
-          if (typeof pageContent === 'string' && pageContent.trim() !== '') {
-            contentSource = pageContent.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-          }
-        }
-        if (contentSource) {
-          let desc = contentSource.substring(0, 155);
-          if (contentSource.length > 155) desc += '...';
-          return desc;
-        }
-        return homeDefaults.description || '';
-      })();
+    : (itemType === 'project' && (itemData as Project)?.description && (itemData as Project).description.trim() !== '')
+      ? (itemData as Project).description!
+      : '';
+  if (!finalMetaDescription || finalMetaDescription.trim() === '') {
+    throw new Error(`[metadata.ts] No meta_description for ${itemType} ${identifier || ''}`);
+  }
 
-  // 3. Meta Keywords (strict per-field fallback)
+  // 3. Meta Keywords
   let finalKeywords: string[] = [];
   if (itemData?.meta_keywords && itemData.meta_keywords.trim() !== '') {
     finalKeywords = itemData.meta_keywords.split(',').map((k: string) => k.trim()).filter((k: string) => k);
-  } else if (homeDefaults.keywords && homeDefaults.keywords.length > 0) {
-    finalKeywords = homeDefaults.keywords;
   }
+  // Keywords are optional
 
-  // 4. OG Image (strict per-field fallback)
+  // 4. OG Image
   let finalOgImageUrl = (itemData?.og_image_url && itemData.og_image_url.trim() !== '')
     ? itemData.og_image_url
     : (itemType === 'project' && (itemData as Project)?.image_url && (itemData as Project).image_url.trim() !== '')
       ? (itemData as Project).image_url
       : (itemType === 'blogPost' && (itemData as BlogPost)?.image_url && (itemData as BlogPost).image_url.trim() !== '')
         ? (itemData as BlogPost).image_url
-        : homeDefaults.ogImage || '';
+        : '';
+  // OG image is optional
 
   return {
     title: String(finalMetaTitle).trim(),

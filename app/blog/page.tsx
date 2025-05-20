@@ -38,18 +38,17 @@ import { getPageContent } from '@/lib/db';
 
 export default async function BlogPage() {
   const blogPosts = await getBlogPosts();
-  let content = { title: 'Our Blog', subtitle: 'Stay updated with the latest insights in AI and technology.' };
-  try {
-    const pageData = await getPageContent('blog_listing');
-    if (pageData && pageData.content) {
-      if (typeof pageData.content === 'string') {
-        content = JSON.parse(pageData.content);
-      } else {
-        content = pageData.content;
-      }
+  const pageData = await getPageContent('blog_listing');
+  let content: { title?: string; subtitle?: string } = {};
+  if (pageData && pageData.content) {
+    if (typeof pageData.content === 'string') {
+      content = JSON.parse(pageData.content);
+    } else {
+      content = pageData.content;
     }
-  } catch (err) {
-    // fallback to mock content
+  }
+  if (!content.title || !content.subtitle) {
+    throw new Error('Blog listing page content (title/subtitle) missing in database.');
   }
 
   return (
