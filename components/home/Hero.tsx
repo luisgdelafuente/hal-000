@@ -16,7 +16,7 @@ const Hero = ({ content }: { content?: HeroContent }) => {
     title = 'Industry-Specific AI Applications',
     subtitle = 'Transform data into insights, automate workflows, and stay ahead of the competition.',
     cta1 = { label: 'Read Our Blog', href: '/blog' },
-    cta2 = { label: 'Join Waitlist', href: '#waitlist' },
+    cta2 = { label: 'Join Waitlist', href: '#waitlst' },
   } = content || {};
 
   return (

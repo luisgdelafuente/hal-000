@@ -61,20 +61,7 @@ export default async function ProjectsPage() {
         </p>
       </div>
       
-      <div className="mb-8 flex justify-center flex-wrap gap-2">
-        {industries.map((industry, index) => (
-          <button
-            key={index}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              industry === "All" 
-                ? "bg-primary text-primary-foreground" 
-                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            }`}
-          >
-            {industry}
-          </button>
-        ))}
-      </div>
+
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {projects.map((project, index) => (
@@ -84,9 +71,7 @@ export default async function ProjectsPage() {
             className="group overflow-hidden rounded-xl border border-border/40 bg-background shadow-sm hover:shadow-md transition-all"
           >
             <div className="relative h-48 overflow-hidden">
-              <div className="absolute top-3 right-3 z-10 bg-background/90 px-3 py-1 rounded-full text-xs font-medium">
-                {project.category}
-              </div>
+              
               <Image 
                 src={project.image_url} 
                 alt={project.title}
