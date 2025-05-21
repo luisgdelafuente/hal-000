@@ -73,7 +73,7 @@ const Newsletter = ({ section }: { section?: NewsletterSection }) => {
         
         <p className="text-xs text-muted-foreground">
           By signing up, you agree to our{' '}
-          <Link href="/privacy/" className="underline hover:text-foreground">
+          <Link href="/legal/" className="underline hover:text-foreground">
             Privacy Policy
           </Link>
         </p>
