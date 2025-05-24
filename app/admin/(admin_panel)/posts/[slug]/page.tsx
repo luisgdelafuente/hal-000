@@ -98,6 +98,7 @@ export default function EditBlogPostPage({ params }: { params: { slug: string } 
 
       if (revalidationSecret) {
         try {
+          // Revalidate the individual blog post
           const res = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=${pathToRevalidate}`, {
             method: 'POST',
           });
@@ -105,6 +106,16 @@ export default function EditBlogPostPage({ params }: { params: { slug: string } 
             console.error('Failed to revalidate blog post path:', await res.json());
           } else {
             console.log('Blog post path revalidated successfully:', await res.json());
+          }
+
+          // Also revalidate the blog listing page
+          const listingRes = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=/blog`, {
+            method: 'POST',
+          });
+          if (!listingRes.ok) {
+            console.error('Failed to revalidate blog listing page:', await listingRes.json());
+          } else {
+            console.log('Blog listing page revalidated successfully:', await listingRes.json());
           }
         } catch (error) {
           console.error('Error calling revalidation API for blog post:', error);

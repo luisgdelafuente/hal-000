@@ -38,6 +38,37 @@ export default function BlogPostsPage() {
     
     try {
       await deleteBlogPost(id);
+      
+      // Revalidate the blog listing page and home page after deleting post
+      const revalidationSecret = process.env.NEXT_PUBLIC_REVALIDATION_SECRET;
+      if (revalidationSecret) {
+        try {
+          // Revalidate the blog listing page
+          const listingRes = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=/blog`, {
+            method: 'POST',
+          });
+          if (!listingRes.ok) {
+            console.error('Failed to revalidate blog listing page:', await listingRes.json());
+          } else {
+            console.log('Blog listing page revalidated successfully:', await listingRes.json());
+          }
+
+          // Revalidate home page (in case it shows latest blog posts)
+          const homeRes = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=/`, {
+            method: 'POST',
+          });
+          if (!homeRes.ok) {
+            console.error('Failed to revalidate home page:', await homeRes.json());
+          } else {
+            console.log('Home page revalidated successfully:', await homeRes.json());
+          }
+        } catch (error) {
+          console.error('Error calling revalidation API for deleted blog post:', error);
+        }
+      } else {
+        console.warn('NEXT_PUBLIC_REVALIDATION_SECRET is not set. Skipping revalidation call.');
+      }
+      
       await fetchPosts();
     } catch (error) {
       console.error('Error deleting blog post:', error);

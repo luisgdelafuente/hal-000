@@ -66,6 +66,37 @@ export default function NewBlogPostPage() {
         og_image_url: values.og_image_url,
       };
       await createBlogPost(postData);
+      
+      // Revalidate the blog listing page and home page after creating new post
+      const revalidationSecret = process.env.NEXT_PUBLIC_REVALIDATION_SECRET;
+      if (revalidationSecret) {
+        try {
+          // Revalidate the blog listing page
+          const listingRes = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=/blog`, {
+            method: 'POST',
+          });
+          if (!listingRes.ok) {
+            console.error('Failed to revalidate blog listing page:', await listingRes.json());
+          } else {
+            console.log('Blog listing page revalidated successfully:', await listingRes.json());
+          }
+
+          // Revalidate home page (in case it shows latest blog posts)
+          const homeRes = await fetch(`/api/revalidate?secret=${revalidationSecret}&path=/`, {
+            method: 'POST',
+          });
+          if (!homeRes.ok) {
+            console.error('Failed to revalidate home page:', await homeRes.json());
+          } else {
+            console.log('Home page revalidated successfully:', await homeRes.json());
+          }
+        } catch (error) {
+          console.error('Error calling revalidation API for new blog post:', error);
+        }
+      } else {
+        console.warn('NEXT_PUBLIC_REVALIDATION_SECRET is not set. Skipping revalidation call.');
+      }
+
       router.push('/admin/posts');
     } catch (error: any) {
       let msg = 'Error creating blog post.';
