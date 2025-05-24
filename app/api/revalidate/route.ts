@@ -2,14 +2,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
-// Ensure you have REVALIDATION_SECRET in your .env.local file
-const REVALIDATION_SECRET = process.env.REVALIDATION_SECRET;
+// Use the same environment variable that the admin panel uses
+const REVALIDATION_SECRET = process.env.NEXT_PUBLIC_REVALIDATION_SECRET;
 
 export async function POST(request: NextRequest) {
   // Check for secret to confirm this is a valid request
   const secret = request.nextUrl.searchParams.get('secret');
   if (!REVALIDATION_SECRET) {
-    console.error('REVALIDATION_SECRET is not set in environment variables.');
+    console.error('NEXT_PUBLIC_REVALIDATION_SECRET is not set in environment variables.');
     return NextResponse.json({ message: 'Server configuration error: Secret not set.' }, { status: 500 });
   }
   if (secret !== REVALIDATION_SECRET) {

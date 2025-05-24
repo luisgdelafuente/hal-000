@@ -64,8 +64,16 @@ export default function EditBlogPostPage({ params }: { params: { slug: string } 
         const data = await getBlogPostBySlug(params.slug);
         setPost(data);
         form.reset({
-          ...data,
+          title: data.title,
+          slug: data.slug,
+          excerpt: data.excerpt,
+          content: data.content,
+          image_url: data.image_url,
           published: !!data.published_at,
+          meta_title: data.meta_title || '',
+          meta_description: data.meta_description || '',
+          meta_keywords: data.meta_keywords || '',
+          og_image_url: data.og_image_url || '',
         });
         setLoading(false);
       } catch (error) {
@@ -84,7 +92,11 @@ export default function EditBlogPostPage({ params }: { params: { slug: string } 
         excerpt: values.excerpt,
         content: values.content,
         image_url: values.image_url,
-        published_at: values.published ? new Date().toISOString() : undefined,
+        // Only set published_at if the post is being published for the first time
+        // If it was already published, keep the original date
+        published_at: values.published 
+          ? (post.published_at || new Date().toISOString()) 
+          : null,
         meta_title: values.meta_title,
         meta_description: values.meta_description,
         meta_keywords: values.meta_keywords,

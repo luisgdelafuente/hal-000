@@ -9,28 +9,93 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getBlogPosts, deleteBlogPost } from '@/lib/db';
+import { getAllBlogPosts, deleteBlogPost } from '@/lib/db';
 import { 
   Eye, 
   Edit, 
-  Trash2 
+  Trash2,
+  ChevronUp,
+  ChevronDown
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+
+type SortField = 'title' | 'status' | 'published_at';
+type SortDirection = 'asc' | 'desc';
 
 export default function BlogPostsPage() {
-  const [posts, setPosts] = useState<Awaited<ReturnType<typeof getBlogPosts>>>([]);
+  const [posts, setPosts] = useState<Awaited<ReturnType<typeof getAllBlogPosts>>>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sortField, setSortField] = useState<SortField>('published_at');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
   const fetchPosts = async () => {
     try {
-      const data = await getBlogPosts();
+      const data = await getAllBlogPosts();
       setPosts(data);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const sortedPosts = useMemo(() => {
+    return [...posts].sort((a, b) => {
+      let aValue: string | number;
+      let bValue: string | number;
+
+      switch (sortField) {
+        case 'title':
+          aValue = a.title.toLowerCase();
+          bValue = b.title.toLowerCase();
+          break;
+        case 'status':
+          aValue = a.published_at ? 'published' : 'draft';
+          bValue = b.published_at ? 'published' : 'draft';
+          break;
+        case 'published_at':
+          // Handle null dates by treating them as very old dates for sorting
+          aValue = a.published_at ? new Date(a.published_at).getTime() : 0;
+          bValue = b.published_at ? new Date(b.published_at).getTime() : 0;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }, [posts, sortField, sortDirection]);
+
+  const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => {
+    const isActive = sortField === field;
+    const Icon = sortDirection === 'asc' ? ChevronUp : ChevronDown;
+
+    return (
+      <TableHead>
+        <Button
+          variant="ghost"
+          className="h-auto p-0 font-semibold hover:bg-transparent"
+          onClick={() => handleSort(field)}
+        >
+          <div className="flex items-center gap-1">
+            {children}
+            {isActive && <Icon className="h-4 w-4" />}
+          </div>
+        </Button>
+      </TableHead>
+    );
   };
 
   const handleDelete = async (id: number) => {
@@ -97,14 +162,14 @@ export default function BlogPostsPage() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Published At</TableHead>
+            <SortableHeader field="title">Title</SortableHeader>
+            <SortableHeader field="status">Status</SortableHeader>
+            <SortableHeader field="published_at">Published At</SortableHeader>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {posts.map((post) => (
+          {sortedPosts.map((post) => (
             <TableRow key={post.id}>
               <TableCell>{post.title}</TableCell>
               <TableCell>{post.published_at ? 'Published' : 'Draft'}</TableCell>
