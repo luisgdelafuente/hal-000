@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getBlogPosts, deleteBlogPost } from '@/lib/db';
+import { getAllBlogPosts, deleteBlogPost } from '@/lib/db';
 import { 
   Eye, 
   Edit, 
@@ -19,12 +19,12 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 export default function BlogPostsPage() {
-  const [posts, setPosts] = useState<Awaited<ReturnType<typeof getBlogPosts>>>([]);
+  const [posts, setPosts] = useState<Awaited<ReturnType<typeof getAllBlogPosts>>>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosts = async () => {
     try {
-      const data = await getBlogPosts();
+      const data = await getAllBlogPosts();
       setPosts(data);
     } catch (error) {
       console.error('Error fetching blog posts:', error);

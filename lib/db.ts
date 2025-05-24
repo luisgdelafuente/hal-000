@@ -67,7 +67,25 @@ export async function getBlogPosts(options?: { limit?: number }) {
   let query = supabase
     .from('blog_posts')
     .select('*')
+    .not('published_at', 'is', null) // Only get published posts
     .order('published_at', { ascending: false });
+
+  // Apply limit if provided
+  if (options?.limit) {
+    query = query.limit(options.limit);
+  }
+  
+  const { data, error } = await query;
+  
+  if (error) throw error
+  return data as BlogPost[]
+}
+
+export async function getAllBlogPosts(options?: { limit?: number }) {
+  let query = supabase
+    .from('blog_posts')
+    .select('*')
+    .order('id', { ascending: false }); // Order by ID for admin (creation order)
 
   // Apply limit if provided
   if (options?.limit) {
